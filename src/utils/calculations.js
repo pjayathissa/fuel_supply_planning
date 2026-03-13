@@ -362,19 +362,6 @@ export function calculateAll(params, measureStates) {
   // Cost per extra day of reserve gained
   const costPerExtraDay = extraDays > 0 ? totalAnnualCost / extraDays : 0;
 
-  // Tier classification based on petrol demand reduction
-  let tier, tierLabel;
-  if (petrolDemandReduction < 0.05) {
-    tier = 1;
-    tierLabel = 'Tier 1 — Precautionary';
-  } else if (petrolDemandReduction < 0.15) {
-    tier = 2;
-    tierLabel = 'Tier 2 — Alert';
-  } else {
-    tier = 3;
-    tierLabel = 'Tier 3 — Emergency';
-  }
-
   return {
     perMeasure: results,
     combinedPetrolSaved,
@@ -385,8 +372,6 @@ export function calculateAll(params, measureStates) {
     extraDays,
     totalAnnualCost,
     costPerExtraDay,
-    tier,
-    tierLabel,
     activeMeasureCount,
     interactionDiscount,
   };
