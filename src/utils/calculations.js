@@ -32,9 +32,9 @@ export function calcWorkFromHome(params, sliderValue) {
   const netDailyFuelSaved = (grossWeeklyFuelSaved * reboundFactor) / 7;
 
   // Economic cost scales non-linearly (quadratic-ish)
-  // 1 day ≈ $200M, 5 days ≈ $5B
-  const baseCostPerDay = 200_000_000;
-  const annualEconomicCost = baseCostPerDay * Math.pow(daysReduced, 1.8);
+  const annualEconomicImpact = 
+    (300 + 860 * daysReduced - 100 * Math.pow(daysReduced, 2) - 57 * Math.pow(daysReduced, 3)) 
+    * 1_000_000;
 
   return {
     dailyFuelSaved: netDailyFuelSaved,
@@ -55,8 +55,8 @@ export function calcPublicTransport(params, sliderValue) {
   const shiftedCommuters = totalCommuters * params.ptModeShare * (ptIncreasePercent / 100);
   const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel;
 
-  // PT adds ~50 min/day; 30% of that time is productive → 70% unproductive
-  const extraHoursPerDay = shiftedCommuters * (50 / 60) * 0.70;
+  // PT adds ~20 min/day; 60% of that time is productive → 40% unproductive
+  const extraHoursPerDay = shiftedCommuters * (20 / 60) * 0.40;
   const annualTimeCost = extraHoursPerDay * 30 * 230; // $30/hr, 230 working days
 
   // Congestion benefit: ~$15/day per car removed from the road
@@ -89,8 +89,8 @@ export function calcCycling(params, sliderValue) {
   // Household fuel savings: fuel cost avoided over 230 working days
   const fuelSavingsToHouseholds =
     shiftedCommuters * params.avgCommuteFuel * 2.80 * 230;
-  // Net benefit (negative cost), applied conservatively at 30%
-  const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds) * 0.3;
+  // Net benefit (negative cost)
+  const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds);
 
   return {
     dailyFuelSaved,
