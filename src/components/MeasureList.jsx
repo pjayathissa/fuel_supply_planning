@@ -1,8 +1,8 @@
-import { MEASURES, TIER_PRESETS } from '../constants/defaults';
+import { MEASURES } from '../constants/defaults';
 import MeasureCard from './MeasureCard';
 
 /**
- * Container for all measure cards with tier preset buttons.
+ * Container for all measure cards with a reset button.
  */
 export default function MeasureList({
   measureStates,
@@ -14,17 +14,8 @@ export default function MeasureList({
     <div className="measure-list">
       <h2 className="section-title">Demand Restraint Measures</h2>
 
-      {/* Tier preset buttons */}
+      {/* Reset button */}
       <div className="preset-buttons">
-        {Object.entries(TIER_PRESETS).map(([key, preset]) => (
-          <button
-            key={key}
-            className={`preset-btn preset-btn-${key}`}
-            onClick={() => onApplyPreset(preset)}
-          >
-            {preset.label}
-          </button>
-        ))}
         <button
           className="preset-btn preset-btn-reset"
           onClick={() => onApplyPreset(null)}

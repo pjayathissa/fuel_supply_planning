@@ -76,7 +76,6 @@ export default function App() {
       `Total demand reduction: ${(results.petrolDemandReduction * 100).toFixed(1)}%`,
       `Daily fuel saved: ${(results.combinedDailyFuelSaved / 1e6).toFixed(2)} million litres`,
       `Estimated annual economic cost: $${Math.abs(results.totalAnnualCost) >= 1e9 ? (results.totalAnnualCost / 1e9).toFixed(1) + 'B' : (results.totalAnnualCost / 1e6).toFixed(0) + 'M'}`,
-      `Classification: ${results.tierLabel}`,
       '',
       'Active measures:',
     ];

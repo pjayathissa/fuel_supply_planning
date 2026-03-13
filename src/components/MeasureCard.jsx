@@ -38,9 +38,6 @@ export default function MeasureCard({ measure, state, onChange, result }) {
             <AlertTriangle size={18} className="measure-emergency-icon" />
           )}
           <h3 className="measure-card-title">{name}</h3>
-          {isEmergency && (
-            <span className="measure-emergency-badge">Tier 3 — Emergency</span>
-          )}
         </div>
         <label className="toggle-switch">
           <input

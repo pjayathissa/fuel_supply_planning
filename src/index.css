@@ -366,12 +366,6 @@ h1, h2, h3, h4 {
   box-shadow: var(--shadow-sm);
 }
 
-.preset-btn-tier1 { border-color: var(--teal); color: var(--teal); }
-.preset-btn-tier1:hover { background: var(--teal-bg); }
-.preset-btn-tier2 { border-color: var(--amber); color: var(--amber); }
-.preset-btn-tier2:hover { background: var(--amber-bg); }
-.preset-btn-tier3 { border-color: var(--red); color: var(--red); }
-.preset-btn-tier3:hover { background: var(--red-bg); }
 .preset-btn-reset { border-color: var(--grey-300); color: var(--grey-500); }
 .preset-btn-reset:hover { background: var(--grey-100); }
 
@@ -443,17 +437,6 @@ h1, h2, h3, h4 {
 .measure-emergency-icon {
   color: var(--red);
   flex-shrink: 0;
-}
-
-.measure-emergency-badge {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: var(--red-bg);
-  color: var(--red);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  white-space: nowrap;
 }
 
 /* Toggle switch */
@@ -636,41 +619,6 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-}
-
-.results-tier {
-  display: flex;
-  justify-content: center;
-}
-
-/* ─── Tier badge ────────────────────────────────────────────────────────── */
-
-.tier-badge {
-  display: inline-block;
-  padding: var(--space-xs) var(--space-lg);
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  font-family: var(--font-sans);
-  text-align: center;
-}
-
-.tier-1 {
-  background: var(--teal-bg);
-  color: var(--teal);
-  border: 1px solid rgba(13, 148, 136, 0.2);
-}
-
-.tier-2 {
-  background: var(--amber-bg);
-  color: var(--amber);
-  border: 1px solid rgba(217, 119, 6, 0.2);
-}
-
-.tier-3 {
-  background: var(--red-bg);
-  color: var(--red);
-  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 /* ─── Result cards ──────────────────────────────────────────────────────── */

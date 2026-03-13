@@ -119,7 +119,6 @@ export const MEASURES = [
     id: 'wfh',
     name: 'Work From Home',
     description: 'Office workers work from home additional days, eliminating commute fuel use.',
-    tier: 1,
     hasSlider: true,
     sliderConfig: {
       label: 'Extra WFH days per week',
@@ -134,7 +133,6 @@ export const MEASURES = [
     id: 'publicTransport',
     name: 'Public Transport Mode Shift',
     description: 'Commuters shift from private car to existing public transport services.',
-    tier: 1,
     hasSlider: true,
     sliderConfig: {
       label: 'Increase in PT use',
@@ -150,7 +148,6 @@ export const MEASURES = [
     id: 'cycling',
     name: 'Cycling & Walking Mode Shift',
     description: 'Commuters shift from private car to cycling, e-bikes, or walking.',
-    tier: 1,
     hasSlider: true,
     sliderConfig: {
       label: 'Increase in active transport',
@@ -167,7 +164,6 @@ export const MEASURES = [
     name: 'Speed Limit Reduction',
     description: 'Reduced highway speeds improve fuel efficiency through lower aerodynamic drag.',
     note: 'Applies to non-EV vehicles on roads currently posted at 100 km/h.',
-    tier: 2,
     hasSlider: true,
     sliderConfig: {
       label: 'New highway speed limit',
@@ -182,7 +178,6 @@ export const MEASURES = [
     id: 'carpooling',
     name: 'Carpooling',
     description: 'Increase average vehicle occupancy through employer-coordinated carpooling.',
-    tier: 1,
     hasSlider: true,
     sliderConfig: {
       label: 'Target average car occupancy',
@@ -197,7 +192,6 @@ export const MEASURES = [
     id: 'carFreeSundays',
     name: 'Car-Free Sundays',
     description: 'Restrict private vehicle use in major cities on Sundays. Applied to Auckland, Wellington, Christchurch, and Hamilton.',
-    tier: 2,
     hasSlider: true,
     sliderConfig: {
       label: 'Frequency',
@@ -215,7 +209,6 @@ export const MEASURES = [
     id: 'oddEvenPlates',
     name: 'Odd/Even Plate Restrictions',
     description: 'Vehicles with odd plates drive on odd-dated days, even on even. Approximately halves vehicles on road on any given day.',
-    tier: 3,
     isEmergency: true,
     hasSlider: false,
   },
@@ -223,7 +216,6 @@ export const MEASURES = [
     id: 'ecoDriving',
     name: 'Eco-Driving Campaign',
     description: 'Public campaign promoting fuel-efficient driving techniques: smooth acceleration, tyre pressure, reduced idling.',
-    tier: 1,
     hasSlider: true,
     sliderConfig: {
       label: 'Estimated uptake/effectiveness',
@@ -239,7 +231,6 @@ export const MEASURES = [
     id: 'freightConsolidation',
     name: 'Freight Consolidation',
     description: 'Consolidate urban freight deliveries and shift to off-peak hours to reduce diesel consumption.',
-    tier: 2,
     hasSlider: true,
     sliderConfig: {
       label: 'Urban freight fuel reduction',
@@ -255,50 +246,8 @@ export const MEASURES = [
     id: 'fuelPurchaseCaps',
     name: 'Fuel Purchase Caps',
     description: 'Per-visit fuel purchase limits (e.g., 40L per vehicle). Prevents panic buying and smooths demand. Does not directly reduce consumption but improves distribution equity.',
-    tier: 2,
     hasSlider: false,
     isDemandSmoothing: true,
   },
 ];
 
-/**
- * Tier preset configurations
- */
-export const TIER_PRESETS = {
-  tier1: {
-    label: 'Tier 1 — Precautionary',
-    measures: {
-      wfh: { enabled: true, value: 1 },
-      ecoDriving: { enabled: true, value: 5 },
-      cycling: { enabled: true, value: 10 },
-      carpooling: { enabled: true, value: 1.3 },
-    },
-  },
-  tier2: {
-    label: 'Tier 2 — Alert',
-    measures: {
-      wfh: { enabled: true, value: 1 },
-      ecoDriving: { enabled: true, value: 5 },
-      cycling: { enabled: true, value: 10 },
-      carpooling: { enabled: true, value: 1.3 },
-      speedLimit: { enabled: true, value: 80 },
-      carFreeSundays: { enabled: true, value: 0 },  // index 0 = Weekly
-      freightConsolidation: { enabled: true, value: 2 },
-      publicTransport: { enabled: true, value: 10 },
-    },
-  },
-  tier3: {
-    label: 'Tier 3 — Emergency',
-    measures: {
-      wfh: { enabled: true, value: 5 },
-      ecoDriving: { enabled: true, value: 8 },
-      cycling: { enabled: true, value: 25 },
-      carpooling: { enabled: true, value: 1.5 },
-      speedLimit: { enabled: true, value: 80 },
-      carFreeSundays: { enabled: true, value: 0 },
-      freightConsolidation: { enabled: true, value: 3 },
-      publicTransport: { enabled: true, value: 30 },
-      oddEvenPlates: { enabled: true },
-    },
-  },
-};

@@ -2,7 +2,6 @@ import { TrendingDown, TrendingUp, DollarSign, Gauge } from 'lucide-react';
 import AnimatedNumber from './AnimatedNumber';
 import FuelGauge from './FuelGauge';
 import StackedBarChart from './StackedBarChart';
-import TierBadge from './TierBadge';
 
 /**
  * Format dollar values: show as $X.XB if ≥ $1B, $XXXM otherwise.
@@ -43,8 +42,6 @@ export default function ResultsDashboard({ results, baselineParams }) {
     combinedDailyFuelSaved,
     totalAnnualCost,
     costPerExtraDay,
-    tier,
-    tierLabel,
     activeMeasureCount,
   } = results;
 
@@ -55,13 +52,6 @@ export default function ResultsDashboard({ results, baselineParams }) {
   return (
     <div className="results-dashboard">
       <h2 className="section-title">Impact Summary</h2>
-
-      {/* Tier badge */}
-      {hasActiveMeasures && (
-        <div className="results-tier">
-          <TierBadge tier={tier} label={tierLabel} />
-        </div>
-      )}
 
       {/* Fuel reserve extension — primary metric */}
       <div className="result-card result-card-primary">
