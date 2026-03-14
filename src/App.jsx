@@ -111,6 +111,8 @@ export default function App() {
             onMeasureChange={handleMeasureChange}
             onApplyPreset={handleApplyPreset}
             results={results}
+            params={params}
+            onParamsChange={setParams}
           />
         </div>
 

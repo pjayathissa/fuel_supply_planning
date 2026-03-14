@@ -528,6 +528,125 @@ h1, h2, h3, h4 {
   border-radius: var(--radius-sm);
 }
 
+/* ─── Measure card: expandable parameters & assumptions ────────────────── */
+
+.measure-params-section {
+  margin-top: var(--space-md);
+  border-top: 1px solid var(--grey-100);
+  padding-top: var(--space-sm);
+}
+
+.measure-params-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--grey-500);
+  transition: color 0.15s;
+}
+
+.measure-params-toggle:hover {
+  color: var(--teal);
+}
+
+.measure-params-content {
+  animation: slideDown 0.2s ease-out;
+  padding-top: var(--space-sm);
+}
+
+.measure-params-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.measure-param-field {
+  position: relative;
+}
+
+.measure-param-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.measure-param-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--grey-600);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.measure-param-unit {
+  font-size: 0.7rem;
+  color: var(--grey-400);
+}
+
+.measure-param-input-row {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.measure-param-input {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+  color: var(--grey-800);
+  background: var(--grey-50);
+  transition: border-color 0.15s;
+}
+
+.measure-param-input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);
+}
+
+.measure-assumptions {
+  margin-top: var(--space-sm);
+}
+
+.measure-assumptions-title {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--grey-500);
+  margin-bottom: var(--space-xs);
+}
+
+.measure-assumptions-list {
+  padding-left: var(--space-md);
+  margin: 0;
+}
+
+.measure-assumptions-list li {
+  font-size: 0.78rem;
+  color: var(--grey-500);
+  line-height: 1.5;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 600px) {
+  .measure-params-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ─── Slider input ──────────────────────────────────────────────────────── */
 
 .slider-input {

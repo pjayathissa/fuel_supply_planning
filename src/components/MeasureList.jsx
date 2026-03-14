@@ -9,6 +9,8 @@ export default function MeasureList({
   onMeasureChange,
   onApplyPreset,
   results,
+  params,
+  onParamsChange,
 }) {
   return (
     <div className="measure-list">
@@ -33,6 +35,8 @@ export default function MeasureList({
             state={measureStates[measure.id]}
             onChange={onMeasureChange}
             result={results?.perMeasure?.[measure.id]}
+            params={params}
+            onParamsChange={onParamsChange}
           />
         ))}
       </div>
