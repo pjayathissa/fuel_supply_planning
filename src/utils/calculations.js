@@ -64,8 +64,7 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   const workingDaysPerYear = 230 * commutingFraction;
   const annualTimeCost = extraHoursPerDay * 30 * workingDaysPerYear;
 
-  // Congestion benefit: ~$15/day per car removed from the road
-  const congestionBenefit = shiftedCommuters * 15 * workingDaysPerYear;
+  const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;
 
   const annualEconomicCost = annualTimeCost - congestionBenefit;
 
@@ -195,9 +194,8 @@ export function calcCarFreeSundays(params, sliderValue) {
  * Net ~40% reduction after accounting for carpooling and PT substitution.
  */
 export function calcOddEvenPlates(params) {
-  const reductionFactor = 0.40;
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
-  const dailyFuelSaved = totalDailyPetrol * reductionFactor;
+  const dailyFuelSaved = totalDailyPetrol * params.oddEvenReductionFactor;
 
   // Significant disruption — ~0.4% of GDP
   const annualEconomicCost = params.annualGDP * 0.004;
