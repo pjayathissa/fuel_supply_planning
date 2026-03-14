@@ -56,7 +56,7 @@ export const BASELINE_DEFAULTS = {
   baselineOfficeDays: {
     value: 4.5,
     unit: 'days in office/week',
-    label: 'Current WFH baseline',
+    label: 'Current days in the office',
     tooltip: 'Post-COVID average office attendance. Most workers do 4-5 days in office.',
   },
   ptModeShare: {
