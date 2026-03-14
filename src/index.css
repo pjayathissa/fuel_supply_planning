@@ -997,6 +997,28 @@ h1, h2, h3, h4 {
   font-style: italic;
 }
 
+/* ─── Chart toggle (mobile only) ───────────────────────────────────────── */
+
+.chart-toggle-btn {
+  display: none;
+}
+
+.chart-container {
+  display: block;
+}
+
+/* ─── Mobile methodology button (hidden on desktop) ────────────────────── */
+
+.mobile-methodology {
+  display: none;
+}
+
+/* ─── Mobile-only utility ──────────────────────────────────────────────── */
+
+.mobile-only {
+  display: none;
+}
+
 /* ─── Action buttons ────────────────────────────────────────────────────── */
 
 .action-buttons {
@@ -1145,23 +1167,91 @@ h1, h2, h3, h4 {
 /* ─── Responsive — mobile ───────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
+  /* Hide header on mobile */
+  .header {
+    display: none;
+  }
+
   .main-layout {
     grid-template-columns: 1fr;
   }
 
+  /* Make results sticky at top on mobile */
   .results-column {
-    position: static;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     order: -1;
   }
 
-  .header-inner {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  /* Compact impact summary for mobile */
+  .results-dashboard {
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
   }
 
-  .header-title {
-    font-size: 1.4rem;
+  .results-dashboard .section-title {
+    font-size: 1rem;
+    margin-bottom: var(--space-xs);
+    padding-bottom: var(--space-xs);
+  }
+
+  /* Hide demand reduction & daily fuel saved on mobile */
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  /* Show mobile-only elements */
+  .mobile-only {
+    display: flex;
+  }
+
+  /* Chart toggle button styling */
+  .chart-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    width: 100%;
+    padding: var(--space-sm);
+    border: 1px solid var(--grey-200);
+    border-radius: var(--radius-sm);
+    background: var(--grey-50);
+    font-size: 0.82rem;
+    font-family: var(--font-sans);
+    color: var(--grey-600);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .chart-toggle-btn:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  /* Hide chart by default on mobile, show when toggled */
+  .chart-container {
+    display: none;
+  }
+
+  .chart-container.chart-visible {
+    display: block;
+  }
+
+  /* Hide desktop action buttons on mobile */
+  .desktop-actions {
+    display: none;
+  }
+
+  /* Show mobile methodology button at bottom */
+  .mobile-methodology {
+    display: block;
+  }
+
+  .mobile-methodology .action-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .baseline-grid {
@@ -1217,9 +1307,6 @@ h1, h2, h3, h4 {
     padding: var(--space-md);
   }
 
-  .action-buttons {
-    flex-direction: column;
-  }
 }
 
 /* ─── Recharts overrides ────────────────────────────────────────────────── */

@@ -12,10 +12,6 @@ export default function Header() {
           <p className="header-subtitle">
             Modelling demand-restraint measures for fuel supply disruptions
           </p>
-          <p className="header-note">
-            Based on MBIE data as at March 2026. Developed for scenario analysis
-            — not official government guidance.
-          </p>
         </div>
       </div>
     </header>
