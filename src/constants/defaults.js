@@ -120,6 +120,12 @@ export const BASELINE_DEFAULTS = {
     label: 'Congestion benefit per car removed',
     tooltip: 'Estimated daily economic benefit per car removed from the road due to reduced congestion.',
   },
+  fuelPricePerLitre: {
+    value: 3.00,
+    unit: 'NZ$/litre',
+    label: 'Fuel price per litre',
+    tooltip: 'Average retail fuel price used to estimate household cost savings. Source: MBIE weekly fuel price monitoring.',
+  },
 };
 
 // Total commuters derived from office car commuters + PT + active mode shares
