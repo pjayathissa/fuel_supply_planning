@@ -118,10 +118,10 @@ export const MEASURES = [
   {
     id: 'wfh',
     name: 'Work From Home',
-    description: 'Office workers work from home additional days, eliminating commute fuel use.',
+    description: 'Office workers work from home more days per week, eliminating commute fuel use. Baseline is 0.5 days/week.',
     hasSlider: true,
     sliderConfig: {
-      label: 'WFH days per week',
+      label: 'Total WFH days per week',
       min: 0.5,
       max: 5,
       step: 0.5,

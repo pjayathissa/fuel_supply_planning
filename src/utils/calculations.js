@@ -16,12 +16,14 @@ import { getTotalCommuters } from '../constants/defaults';
 
 /**
  * 1. Work From Home
- * Extra WFH days reduce commute trips for office car commuters.
+ * Slider value is total WFH days per week.  We compare against the baseline
+ * WFH level (5 − baselineOfficeDays) to find the additional trip reduction.
  * A 15% rebound factor accounts for non-commute driving on WFH days.
  */
 export function calcWorkFromHome(params, sliderValue) {
-  const extraWFHDays = sliderValue;
-  const daysReduced = Math.min(extraWFHDays, params.baselineOfficeDays);
+  const wfhDays = sliderValue;
+  const baselineWfhDays = 5 - params.baselineOfficeDays;
+  const daysReduced = Math.max(0, wfhDays - baselineWfhDays);
   const tripReductionFraction = daysReduced / params.baselineOfficeDays;
 
   // Gross weekly fuel saved across all office car commuters
@@ -32,8 +34,8 @@ export function calcWorkFromHome(params, sliderValue) {
   const netDailyFuelSaved = (grossWeeklyFuelSaved * reboundFactor) / 7;
 
   // Economic cost scales non-linearly (quadratic-ish)
-  const annualEconomicImpact = 
-    (300 + 860 * daysReduced - 100 * Math.pow(daysReduced, 2) - 57 * Math.pow(daysReduced, 3)) 
+  const annualEconomicCost =
+    (300 + 860 * daysReduced - 100 * Math.pow(daysReduced, 2) - 57 * Math.pow(daysReduced, 3))
     * 1_000_000;
 
   return {
@@ -47,20 +49,23 @@ export function calcWorkFromHome(params, sliderValue) {
  * 2. Public Transport Mode Shift
  * Relative increase in PT mode share shifts commuters from car to PT.
  * Economic cost = extra commute time minus congestion reduction benefit.
+ * When WFH is active, mode shift only applies on days people commute.
  */
-export function calcPublicTransport(params, sliderValue) {
+export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   const ptIncreasePercent = sliderValue;
   const totalCommuters = getTotalCommuters(params);
+  const commutingFraction = (5 - wfhDays) / 5;
 
   const shiftedCommuters = totalCommuters * params.ptModeShare * (ptIncreasePercent / 100);
-  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel;
+  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * commutingFraction;
 
   // PT adds ~20 min/day; 60% of that time is productive → 40% unproductive
   const extraHoursPerDay = shiftedCommuters * (20 / 60) * 0.40;
-  const annualTimeCost = extraHoursPerDay * 30 * 230; // $30/hr, 230 working days
+  const workingDaysPerYear = 230 * commutingFraction;
+  const annualTimeCost = extraHoursPerDay * 30 * workingDaysPerYear;
 
   // Congestion benefit: ~$15/day per car removed from the road
-  const congestionBenefit = shiftedCommuters * 15 * 230;
+  const congestionBenefit = shiftedCommuters * 15 * workingDaysPerYear;
 
   const annualEconomicCost = annualTimeCost - congestionBenefit;
 
@@ -75,20 +80,23 @@ export function calcPublicTransport(params, sliderValue) {
  * 3. Cycling & Walking Mode Shift
  * Similar to PT but with health/productivity benefits → net economic benefit.
  * Slight discount (0.85×) because active commuters tend to have shorter trips.
+ * When WFH is active, mode shift only applies on days people commute.
  */
-export function calcCycling(params, sliderValue) {
+export function calcCycling(params, sliderValue, wfhDays = 0) {
   const activeIncreasePercent = sliderValue;
   const totalCommuters = getTotalCommuters(params);
+  const commutingFraction = (5 - wfhDays) / 5;
 
   const shiftedCommuters =
     totalCommuters * params.activeModeShare * (activeIncreasePercent / 100);
-  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * 0.85;
+  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * 0.85 * commutingFraction;
 
   // Health benefit: 1.5 fewer sick days at $350/day value
   const healthBenefit = shiftedCommuters * 350 * 1.5;
-  // Household fuel savings: fuel cost avoided over 230 working days
+  // Household fuel savings: fuel cost avoided over actual commuting days
+  const workingDaysPerYear = 230 * commutingFraction;
   const fuelSavingsToHouseholds =
-    shiftedCommuters * params.avgCommuteFuel * 2.80 * 230;
+    shiftedCommuters * params.avgCommuteFuel * 2.80 * workingDaysPerYear;
   // Net benefit (negative cost)
   const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds);
 
@@ -302,6 +310,11 @@ export function calculateAll(params, measureStates) {
   let totalAnnualCost = 0;
   let activeMeasureCount = 0;
 
+  // Determine effective WFH days for cross-measure interaction
+  const wfhState = measureStates.wfh;
+  const effectiveWfhDays =
+    wfhState && wfhState.enabled ? wfhState.value : 5 - params.baselineOfficeDays;
+
   // Calculate each active measure
   for (const [id, state] of Object.entries(measureStates)) {
     if (!state.enabled) {
@@ -312,7 +325,11 @@ export function calculateAll(params, measureStates) {
     const calcFn = CALC_MAP[id];
     if (!calcFn) continue;
 
-    const result = calcFn(params, state.value);
+    // Pass WFH days to commute-based mode shift measures
+    const needsWfhContext = id === 'publicTransport' || id === 'cycling';
+    const result = needsWfhContext
+      ? calcFn(params, state.value, effectiveWfhDays)
+      : calcFn(params, state.value);
     results[id] = { ...result, active: true };
     activeMeasureCount++;
 
