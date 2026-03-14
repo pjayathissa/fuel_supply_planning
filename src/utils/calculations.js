@@ -141,15 +141,13 @@ export function calcSpeedLimit(params, sliderValue) {
 /**
  * 5. Carpooling
  * Higher occupancy → fewer car trips needed.
- * Commuter trips ≈ 20% of all petrol use.
  */
 export function calcCarpooling(params, sliderValue) {
   const targetOccupancy = sliderValue;
   const vehicleReduction = 1 - params.avgCarOccupancy / targetOccupancy;
 
-  const commuterPetrolShare = 0.20;
-  const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
-  const dailyFuelSaved = totalDailyPetrol * commuterPetrolShare * vehicleReduction;
+  const dailyCommuterFuel = params.officeCarCommuters * params.avgCommuteFuel;
+  const dailyFuelSaved = dailyCommuterFuel * vehicleReduction;
 
   // Net benefit from shared fuel costs (30% of fuel savings)
   const annualEconomicCost = -(dailyFuelSaved * 365 * 2.80 * 0.3);
@@ -198,14 +196,13 @@ export function calcCarFreeSundays(params, sliderValue) {
 export function calcOddEvenPlates(params) {
   const commuterReduction = 0.35;
   const discretionaryReduction = 0.40;
-  const commuterPetrolShare = 0.20;
   const discretionaryPetrolShare = 0.35;
 
+  const dailyCommuterFuel = params.officeCarCommuters * params.avgCommuteFuel;
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
   const dailyFuelSaved =
-    totalDailyPetrol *
-    (commuterPetrolShare * commuterReduction +
-      discretionaryPetrolShare * discretionaryReduction);
+    dailyCommuterFuel * commuterReduction +
+    totalDailyPetrol * discretionaryPetrolShare * discretionaryReduction;
 
   // Significant disruption — ~0.4% of GDP
   const annualEconomicCost = params.annualGDP * 0.004;
