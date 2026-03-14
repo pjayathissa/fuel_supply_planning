@@ -62,7 +62,7 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   // PT adds ~20 min/day; 60% of that time is productive → 40% unproductive
   const extraHoursPerDay = shiftedCommuters * (20 / 60) * 0.40;
   const workingDaysPerYear = 230 * commutingFraction;
-  const annualTimeCost = extraHoursPerDay * 30 * workingDaysPerYear;
+  const annualTimeCost = extraHoursPerDay * params.personalTimeCostPerHour * workingDaysPerYear;
 
   const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;
 
@@ -125,8 +125,8 @@ export function calcSpeedLimit(params, sliderValue) {
   const timeIncrease = avgOriginalSpeed / sliderValue - 1;
   const extraHoursPerYear =
     ((totalAnnualVKT * affectedVKTShare) / avgOriginalSpeed) * timeIncrease;
-  const personalTimeCost = extraHoursPerYear * 0.70 * 27;
-  const commercialTimeCost = extraHoursPerYear * 0.30 * 40;
+  const personalTimeCost = extraHoursPerYear * 0.70 * params.personalTimeCostPerHour;
+  const commercialTimeCost = extraHoursPerYear * 0.30 * params.commercialTimeCostPerHour;
   const fuelCostSaving = dailyFuelSaved * 365 * params.fuelPricePerLitre;
   const annualEconomicCost = personalTimeCost + commercialTimeCost - fuelCostSaving;
 
@@ -170,15 +170,14 @@ export function calcCarFreeSundays(params, sliderValue) {
 
   const sundayPetrolShare = 0.12 / 7; // daily equivalent of Sunday's share
   const cityPopShare = 0.60;
-  const complianceFactor = 0.75;
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
 
   // Daily average fuel saved (spread across the week)
   const dailyFuelSaved =
-    totalDailyPetrol * sundayPetrolShare * cityPopShare * complianceFactor * frequency * 7;
+    totalDailyPetrol * sundayPetrolShare * cityPopShare * params.carFreeSundayComplianceFactor * frequency * 7;
 
   // Consumer welfare loss from restricted recreational trips + retail impact
-  const annualEconomicCost = 75_000_000 * frequency;
+  const annualEconomicCost = params.carFreeSundayWelfareCost * frequency;
 
   return {
     dailyFuelSaved,
@@ -197,8 +196,8 @@ export function calcOddEvenPlates(params) {
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
   const dailyFuelSaved = totalDailyPetrol * params.oddEvenReductionFactor;
 
-  // Significant disruption — ~0.4% of GDP
-  const annualEconomicCost = params.annualGDP * 0.004;
+  // Significant disruption
+  const annualEconomicCost = params.annualGDP * params.oddEvenGDPImpactPct;
 
   return {
     dailyFuelSaved,
@@ -220,9 +219,8 @@ export function calcEcoDriving(params, sliderValue) {
   const dailyFuelSaved = totalDailyFuel * (effectivenessPercent / 100) * 0.5;
 
   // Campaign cost minus household fuel cost savings
-  const campaignCost = 8_000_000;
   const householdFuelSavings = dailyFuelSaved * 365 * params.fuelPricePerLitre;
-  const annualEconomicCost = campaignCost - householdFuelSavings;
+  const annualEconomicCost = params.ecoDrivingCampaignCost - householdFuelSavings;
 
   return {
     dailyFuelSaved,
@@ -237,14 +235,13 @@ export function calcEcoDriving(params, sliderValue) {
  */
 export function calcFreightConsolidation(params, sliderValue) {
   const freightReductionPercent = sliderValue;
-  const urbanFreightDieselShare = 0.25;
   const totalDailyDiesel = params.dailyDieselConsumption * 1e6;
 
   const dailyFuelSaved =
-    totalDailyDiesel * urbanFreightDieselShare * (freightReductionPercent / 100);
+    totalDailyDiesel * params.urbanFreightDieselShare * (freightReductionPercent / 100);
 
   // Logistics reorganisation costs scale with intensity
-  const annualEconomicCost = 50_000_000 * (freightReductionPercent / 2);
+  const annualEconomicCost = params.freightLogisticsCostPer2Pct * (freightReductionPercent / 2);
 
   return {
     dailyFuelSaved,
@@ -257,10 +254,10 @@ export function calcFreightConsolidation(params, sliderValue) {
  * 10. Fuel Purchase Caps
  * No direct fuel saving — demand smoothing only.
  */
-export function calcFuelPurchaseCaps() {
+export function calcFuelPurchaseCaps(params) {
   return {
     dailyFuelSaved: 0,
-    annualEconomicCost: 20_000_000,
+    annualEconomicCost: params.fuelCapAdminCost,
     fuelType: 'petrol',
     isDemandSmoothing: true,
   };

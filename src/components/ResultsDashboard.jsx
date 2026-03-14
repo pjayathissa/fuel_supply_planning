@@ -1,4 +1,4 @@
-import { TrendingDown, TrendingUp, DollarSign, Gauge } from 'lucide-react';
+import { TrendingDown, TrendingUp, DollarSign } from 'lucide-react';
 import AnimatedNumber from './AnimatedNumber';
 import FuelGauge from './FuelGauge';
 import StackedBarChart from './StackedBarChart';
@@ -53,32 +53,6 @@ export default function ResultsDashboard({ results, baselineParams }) {
     <div className="results-dashboard">
       <h2 className="section-title">Impact Summary</h2>
 
-      {/* Fuel reserve extension — primary metric */}
-      <div className="result-card result-card-primary">
-        <div className="result-card-icon">
-          <Gauge size={24} />
-        </div>
-        <div className="result-card-content">
-          <div className="result-card-label">Extended onshore reserve</div>
-          <div className="result-card-value">
-            <AnimatedNumber
-              value={hasActiveMeasures ? extendedReserveDays : baselineDays}
-              formatter={(v) => v.toFixed(1)}
-              className="result-number"
-            />
-            <span className="result-unit"> days</span>
-          </div>
-          <div className="result-card-detail">
-            Baseline: {baselineDays} days
-            {hasActiveMeasures && extraDays > 0 && (
-              <span className="result-positive">
-                {' '}(+<AnimatedNumber value={extraDays} formatter={(v) => v.toFixed(1)} /> days)
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Fuel gauge visualisation */}
       <FuelGauge
         baselineDays={baselineDays}
@@ -113,58 +87,47 @@ export default function ResultsDashboard({ results, baselineParams }) {
         </div>
       </div>
 
+      {/* Economic metrics row */}
+      <div className="results-metrics-row">
+        <div className={`result-metric ${totalAnnualCost < 0 ? 'result-metric-benefit' : totalAnnualCost > 0 ? 'result-metric-cost' : ''}`}>
+          <DollarSign size={18} className="metric-icon" />
+          <div>
+            <div className="metric-label">
+              Annual economic impact
+              {totalAnnualCost < 0 && <span className="result-positive"> — benefit</span>}
+            </div>
+            <div className="metric-value">
+              {totalAnnualCost < 0 && '-'}
+              $<AnimatedNumber
+                value={hasActiveMeasures ? parseFloat(formatDollarsAnimated(totalAnnualCost)) : 0}
+                formatter={(v) => {
+                  const abs = Math.abs(v);
+                  if (Math.abs(totalAnnualCost) >= 1e9) return abs.toFixed(1);
+                  return Math.round(abs).toLocaleString();
+                }}
+              />{getDollarUnit(totalAnnualCost)}
+            </div>
+          </div>
+        </div>
+        <div className={`result-metric ${costPerExtraDay < 0 ? 'result-metric-benefit' : costPerExtraDay > 0 ? 'result-metric-cost' : ''}`}>
+          {costPerExtraDay < 0 ? <TrendingUp size={18} className="metric-icon" /> : <TrendingDown size={18} className="metric-icon" />}
+          <div>
+            <div className="metric-label">
+              {costPerExtraDay < 0 ? 'Saving per reserve day' : 'Cost per reserve day'}
+            </div>
+            <div className="metric-value">
+              {hasActiveMeasures && extraDays > 0 ? formatDollars(costPerExtraDay) : '—'}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Stacked bar chart */}
       <StackedBarChart
         results={results}
         baselineDays={baselineDays}
         totalDailyPetrol={totalDailyPetrol}
       />
-
-      {/* Economic impact */}
-      <div className={`result-card ${totalAnnualCost < 0 ? 'result-card-benefit' : totalAnnualCost > 0 ? 'result-card-cost' : ''}`}>
-        <div className="result-card-icon">
-          <DollarSign size={24} />
-        </div>
-        <div className="result-card-content">
-          <div className="result-card-label">
-            Estimated annual economic impact
-            {totalAnnualCost < 0 && <span className="result-positive"> — Net benefit</span>}
-          </div>
-          <div className="result-card-value">
-            {totalAnnualCost < 0 && <span className="result-benefit-prefix">-</span>}
-            <span className="result-dollar">$</span>
-            <AnimatedNumber
-              value={hasActiveMeasures ? parseFloat(formatDollarsAnimated(totalAnnualCost)) : 0}
-              formatter={(v) => {
-                const abs = Math.abs(v);
-                if (Math.abs(totalAnnualCost) >= 1e9) return abs.toFixed(1);
-                return Math.round(abs).toLocaleString();
-              }}
-              className="result-number"
-            />
-            <span className="result-unit">{getDollarUnit(totalAnnualCost)}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Cost-effectiveness */}
-      {hasActiveMeasures && extraDays > 0 && (
-        <div className={`result-card ${costPerExtraDay < 0 ? 'result-card-benefit' : 'result-card-cost'}`}>
-          <div className="result-card-icon">
-            {costPerExtraDay < 0 ? <TrendingUp size={24} /> : <TrendingDown size={24} />}
-          </div>
-          <div className="result-card-content">
-            <div className="result-card-label">
-              {costPerExtraDay < 0
-                ? 'Net saving per day of reserve gained'
-                : 'Cost per extra day of reserve'}
-            </div>
-            <div className="result-card-value">
-              <span className="result-dollar">{formatDollars(costPerExtraDay)}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -861,6 +861,16 @@ h1, h2, h3, h4 {
   border: 1px solid var(--grey-100);
 }
 
+.result-metric-benefit {
+  background: var(--teal-bg);
+  border-color: rgba(13, 148, 136, 0.15);
+}
+
+.result-metric-cost {
+  background: var(--amber-bg);
+  border-color: rgba(217, 119, 6, 0.15);
+}
+
 .metric-icon {
   color: var(--teal);
   flex-shrink: 0;
