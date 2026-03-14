@@ -191,18 +191,13 @@ export function calcCarFreeSundays(params, sliderValue) {
 /**
  * 7. Odd/Even Plate Restrictions
  * Binary measure — roughly halves vehicles on road.
- * In practice ~35% commuter reduction, ~40% discretionary reduction.
+ * Plate restrictions apply to all private vehicles, not just commuters.
+ * Net ~40% reduction after accounting for carpooling and PT substitution.
  */
 export function calcOddEvenPlates(params) {
-  const commuterReduction = 0.35;
-  const discretionaryReduction = 0.40;
-  const discretionaryPetrolShare = 0.35;
-
-  const dailyCommuterFuel = params.officeCarCommuters * params.avgCommuteFuel;
+  const reductionFactor = 0.40;
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
-  const dailyFuelSaved =
-    dailyCommuterFuel * commuterReduction +
-    totalDailyPetrol * discretionaryPetrolShare * discretionaryReduction;
+  const dailyFuelSaved = totalDailyPetrol * reductionFactor;
 
   // Significant disruption — ~0.4% of GDP
   const annualEconomicCost = params.annualGDP * 0.004;

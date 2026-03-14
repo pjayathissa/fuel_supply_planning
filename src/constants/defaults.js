@@ -216,7 +216,6 @@ export const MEASURES = [
     id: 'oddEvenPlates',
     name: 'Odd/Even Plate Restrictions',
     description: 'Vehicles with odd plates drive on odd-dated days, even on even. Approximately halves vehicles on road on any given day.',
-    isEmergency: true,
     hasSlider: false,
   },
   {
