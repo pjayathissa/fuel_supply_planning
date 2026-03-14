@@ -140,7 +140,7 @@ export const BASELINE_DEFAULTS = {
   },
   carFreeSundayWelfareCost: {
     value: 75_000_000,
-    unit: 'NZ$/year',
+    unit: 'million NZ$/year',
     label: 'Car-free Sunday welfare cost',
     tooltip: 'Annual consumer welfare loss per frequency unit from restricted recreational trips and retail impact.',
     displayDivisor: 1e6,
@@ -246,17 +246,15 @@ export const MEASURE_ASSUMPTIONS = {
     'Reduction to 100km/h has only a small impact as there are only a few km of road at 110km/h',
   ],
   carpooling: [
-    'Vehicle reduction = 1 − (baseline occupancy / target occupancy)',
-    'Net economic benefit estimated as 30% of household fuel cost savings',
     'Applied to all car commuters (office workers who drive)',
   ],
   carFreeSundays: [
     'Sunday accounts for ~12% of weekly petrol consumption',
     '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
-    'Compliance factor accounts for non-compliance and trip substitution',
   ],
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
+    'Diffult to quantify - please adjust input variables',
   ],
   ecoDriving: [
     '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
