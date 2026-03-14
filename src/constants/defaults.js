@@ -230,20 +230,20 @@ export const MEASURE_ASSUMPTIONS = {
   ],
   publicTransport: [
     'PT adds ~20 min/day to commute; 60% of that time is productive → 40% is unproductive time cost',
-    '230 working days/year (adjusted for WFH if active)',
+    '230 working days/year (adjusted down if WFH is active)',
     'Congestion benefit applied per car removed from the road',
   ],
   cycling: [
     '0.85× discount — active commuters tend to have shorter trips',
     'Health benefit: 1.5 fewer sick days at $350/day per shifted commuter',
     'Household fuel savings counted as economic benefit',
-    '230 working days/year (adjusted for WFH if active)',
+    '230 working days/year (adjusted down if WFH is active)',
   ],
   speedLimit: [
     'Fuel savings looked up from pre-computed table accounting for NZ road lengths at each speed band',
     'Total annual VKT assumed at 45 billion km',
     'Time cost split: 70% personal, 30% commercial',
-    'Average affected speed assumed at 90 km/h for time cost calculation',
+    'Reduction to 100km/h has only a small impact as there are only a few km of road at 110km/h',
   ],
   carpooling: [
     'Vehicle reduction = 1 − (baseline occupancy / target occupancy)',
@@ -253,7 +253,7 @@ export const MEASURE_ASSUMPTIONS = {
   carFreeSundays: [
     'Sunday accounts for ~12% of weekly petrol consumption',
     '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
-    'Frequency: weekly=1, fortnightly=0.5, monthly=0.23',
+    'Compliance factor accounts for non-compliance and trip substitution',
   ],
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
@@ -276,7 +276,7 @@ export const MEASURES = [
   {
     id: 'wfh',
     name: 'Work From Home',
-    description: 'Office workers work from home more days per week, eliminating commute fuel use. Baseline is 0.5 days/week.',
+    description: 'Office workers work from home more days per week, eliminating commute fuel use. Currently at 0.5 days/week.',
     hasSlider: true,
     sliderConfig: {
       label: 'Total WFH days per week',
@@ -335,7 +335,7 @@ export const MEASURES = [
   {
     id: 'carpooling',
     name: 'Carpooling',
-    description: 'Increase average vehicle occupancy through employer-coordinated carpooling.',
+    description: 'Increase average vehicle occupancy through coordinated carpooling.',
     hasSlider: true,
     sliderConfig: {
       label: 'Target average car occupancy',
