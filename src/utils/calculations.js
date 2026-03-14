@@ -109,28 +109,24 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
 
 /**
  * 4. Speed Limit Reduction
- * Fuel savings are based on per-band analysis accounting for approximate NZ
- * road lengths at each posted speed (110, 100, 90, 80, 70 km/h).
- * Each band's saving represents the % of national fuel saved when that speed
- * band is reduced by 10 km/h. Intermediate slider values interpolate linearly.
+ * Cumulative fuel savings are looked up directly from the speedLimitFuelSavings
+ * table, which accounts for approximate NZ road lengths at each posted speed.
+ * Intermediate slider values (e.g. 85) are linearly interpolated.
  */
 export function calcSpeedLimit(params, sliderValue) {
-  const newSpeedLimit = sliderValue;
-  const bands = params.speedLimitSavingsByBand;
+  const savings = params.speedLimitFuelSavings;
+  const speeds = Object.keys(savings).map(Number).sort((a, b) => b - a); // [100,90,80,70,60]
 
-  // Sum applicable band savings, with linear interpolation for partial bands
+  // Look up or interpolate the cumulative fuel saving fraction
   let fuelSavingFraction = 0;
-  for (const [speedStr, bandSaving] of Object.entries(bands)) {
-    const originalSpeed = Number(speedStr);
-    if (newSpeedLimit < originalSpeed) {
-      const bandBottom = originalSpeed - 10;
-      if (newSpeedLimit <= bandBottom) {
-        // Full band applies
-        fuelSavingFraction += bandSaving;
-      } else {
-        // Partial band — interpolate
-        fuelSavingFraction += bandSaving * ((originalSpeed - newSpeedLimit) / 10);
-      }
+  if (savings[sliderValue] !== undefined) {
+    fuelSavingFraction = savings[sliderValue];
+  } else {
+    const upper = speeds.find((s) => s >= sliderValue);
+    const lower = speeds.find((s) => s <= sliderValue);
+    if (upper != null && lower != null && upper !== lower) {
+      const t = (upper - sliderValue) / (upper - lower);
+      fuelSavingFraction = savings[upper] + t * (savings[lower] - savings[upper]);
     }
   }
 
@@ -138,22 +134,13 @@ export function calcSpeedLimit(params, sliderValue) {
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
   const dailyFuelSaved = totalDailyFuel * fuelSavingFraction;
 
-  // Travel time cost increase (approximate, using weighted speed reduction)
-  // ~45B total VKT/year for NZ; estimate affected VKT from the bands
+  // Travel time cost (approximate — assume average affected speed is 90 km/h)
   const totalAnnualVKT = 45e9;
-  let extraHoursPerYear = 0;
-  for (const [speedStr] of Object.entries(bands)) {
-    const originalSpeed = Number(speedStr);
-    if (newSpeedLimit < originalSpeed) {
-      const effectiveNewSpeed = Math.max(newSpeedLimit, originalSpeed - 10);
-      const actualNewSpeed = newSpeedLimit < originalSpeed - 10 ? newSpeedLimit : effectiveNewSpeed;
-      // Estimate VKT share proportional to fuel saving contribution
-      const bandVKTShare = bands[speedStr] / Object.values(bands).reduce((a, b) => a + b, 0);
-      const totalBandVKT = totalAnnualVKT * bandVKTShare;
-      const timeIncrease = originalSpeed / actualNewSpeed - 1;
-      extraHoursPerYear += (totalBandVKT / originalSpeed) * timeIncrease;
-    }
-  }
+  const affectedVKTShare = fuelSavingFraction / 0.096; // proportion of affected roads
+  const avgOriginalSpeed = 90;
+  const timeIncrease = avgOriginalSpeed / sliderValue - 1;
+  const extraHoursPerYear =
+    ((totalAnnualVKT * affectedVKTShare) / avgOriginalSpeed) * timeIncrease;
   const personalTimeCost = extraHoursPerYear * 0.70 * 27;
   const commercialTimeCost = extraHoursPerYear * 0.30 * 40;
   const fuelCostSaving = dailyFuelSaved * 365 * 2.80;

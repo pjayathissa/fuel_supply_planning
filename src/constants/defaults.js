@@ -86,19 +86,19 @@ export const BASELINE_DEFAULTS = {
     tooltip: '~$410B NZ nominal GDP estimate for 2025/26. Source: Treasury HYEFU.',
     displayDivisor: 1e9,
   },
-  speedLimitSavingsByBand: {
+  speedLimitFuelSavings: {
     value: {
-      110: 0.001,
-      100: 0.031,
-      90: 0.025,
-      80: 0.025,
-      70: 0.014,
+      100: 0.001,
+      90: 0.032,
+      80: 0.057,
+      70: 0.082,
+      60: 0.096,
     },
-    label: 'Fuel savings by speed band (% of national fuel per 10 km/h reduction)',
+    label: 'Cumulative fuel savings by new speed limit (% of national fuel)',
     tooltip:
-      'Percentage of national fuel saved when each speed band is reduced by 10 km/h, ' +
-      'accounting for approximate road lengths at each posted speed. ' +
-      '110→100: 0.1%, 100→90: 3.1%, 90→80: 2.5%, 80→70: 2.5%, 70→60: 1.4%.',
+      'Cumulative % of national fuel saved when all roads above the given speed are ' +
+      'reduced to that limit, accounting for approximate road lengths at each posted speed. ' +
+      '100: 0.1%, 90: 3.2%, 80: 5.7%, 70: 8.2%, 60: 9.6%.',
   },
   evFleetShare: {
     value: 0.055,
