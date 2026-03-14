@@ -561,6 +561,13 @@ h1, h2, h3, h4 {
   padding-top: var(--space-sm);
 }
 
+.measure-params-warning {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0 0 var(--space-sm) 0;
+}
+
 .measure-params-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
