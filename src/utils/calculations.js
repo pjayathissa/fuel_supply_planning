@@ -35,7 +35,7 @@ export function calcWorkFromHome(params, sliderValue) {
 
   // Economic cost scales non-linearly (quadratic-ish)
   const annualEconomicCost =
-    (300 + 860 * daysReduced - 100 * Math.pow(daysReduced, 2) - 57 * Math.pow(daysReduced, 3))
+    -(300 + 860 * daysReduced - 100 * Math.pow(daysReduced, 2) - 57 * Math.pow(daysReduced, 3))
     * 1_000_000;
 
   return {
