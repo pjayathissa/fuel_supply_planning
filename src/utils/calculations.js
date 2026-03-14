@@ -59,8 +59,9 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   const shiftedCommuters = totalCommuters * params.ptModeShare * (ptIncreasePercent / 100);
   const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * commutingFraction;
 
-  // PT adds ~20 min/day; 60% of that time is productive → 40% unproductive
-  const extraHoursPerDay = shiftedCommuters * (20 / 60) * 0.40;
+  // PT adds ~20 min/day; productive fraction is configurable → remainder is unproductive
+  const unproductiveFraction = 1 - params.productivePtTimeFraction;
+  const extraHoursPerDay = shiftedCommuters * (20 / 60) * unproductiveFraction;
   const workingDaysPerYear = 230 * commutingFraction;
   const annualTimeCost = extraHoursPerDay * params.personalTimeCostPerHour * workingDaysPerYear;
 
@@ -96,8 +97,10 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
   const workingDaysPerYear = 230 * commutingFraction;
   const fuelSavingsToHouseholds =
     shiftedCommuters * params.avgCommuteFuel * params.fuelPricePerLitre * workingDaysPerYear;
+  // Congestion benefit: fewer cars on the road
+  const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;
   // Net benefit (negative cost)
-  const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds);
+  const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds + congestionBenefit);
 
   return {
     dailyFuelSaved,
