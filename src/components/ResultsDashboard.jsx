@@ -51,7 +51,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
 
   return (
     <div className="results-dashboard">
-      <h2 className="section-title">Impact Summary</h2>
+      <h2 className="section-title mobile-hidden">Impact Summary</h2>
 
       {/* Fuel gauge visualisation */}
       <FuelGauge
@@ -93,11 +93,9 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
           <DollarSign size={18} className="metric-icon" />
           <div>
             <div className="metric-label">
-              Annual economic impact
-              {totalAnnualCost < 0 && <span className="result-positive"> — benefit</span>}
+              {totalAnnualCost < 0 ? 'Annual benefit' : 'Annual cost'}
             </div>
             <div className="metric-value">
-              {totalAnnualCost < 0 && '-'}
               $<AnimatedNumber
                 value={hasActiveMeasures ? parseFloat(formatDollarsAnimated(totalAnnualCost)) : 0}
                 formatter={(v) => {
@@ -116,7 +114,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
               {costPerExtraDay < 0 ? 'Saving per reserve day' : 'Cost per reserve day'}
             </div>
             <div className="metric-value">
-              {hasActiveMeasures && extraDays > 0 ? formatDollars(costPerExtraDay) : '—'}
+              {hasActiveMeasures && extraDays > 0 ? formatDollars(Math.abs(costPerExtraDay)) : '—'}
             </div>
           </div>
         </div>

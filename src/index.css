@@ -878,6 +878,16 @@ h1, h2, h3, h4 {
   border-color: rgba(217, 119, 6, 0.15);
 }
 
+.result-metric-benefit .metric-label {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.result-metric-cost .metric-label {
+  color: #C2410C;
+  font-weight: 600;
+}
+
 .metric-icon {
   color: var(--teal);
   flex-shrink: 0;
@@ -1198,15 +1208,14 @@ h1, h2, h3, h4 {
     gap: var(--space-sm);
   }
 
-  .results-dashboard .section-title {
-    font-size: 1rem;
-    margin-bottom: var(--space-xs);
-    padding-bottom: var(--space-xs);
-  }
-
-  /* Hide demand reduction & daily fuel saved on mobile */
+  /* Hide elements marked mobile-hidden on mobile */
   .mobile-hidden {
     display: none !important;
+  }
+
+  /* Keep economic metrics row as 2 columns on mobile */
+  .results-metrics-row:not(.mobile-hidden) {
+    grid-template-columns: 1fr 1fr;
   }
 
   /* Show mobile-only elements */
