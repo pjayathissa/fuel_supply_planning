@@ -95,7 +95,7 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
   // Household fuel savings: fuel cost avoided over actual commuting days
   const workingDaysPerYear = 230 * commutingFraction;
   const fuelSavingsToHouseholds =
-    shiftedCommuters * params.avgCommuteFuel * 2.80 * workingDaysPerYear;
+    shiftedCommuters * params.avgCommuteFuel * params.fuelPricePerLitre * workingDaysPerYear;
   // Net benefit (negative cost)
   const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds);
 
@@ -127,7 +127,7 @@ export function calcSpeedLimit(params, sliderValue) {
     ((totalAnnualVKT * affectedVKTShare) / avgOriginalSpeed) * timeIncrease;
   const personalTimeCost = extraHoursPerYear * 0.70 * 27;
   const commercialTimeCost = extraHoursPerYear * 0.30 * 40;
-  const fuelCostSaving = dailyFuelSaved * 365 * 2.80;
+  const fuelCostSaving = dailyFuelSaved * 365 * params.fuelPricePerLitre;
   const annualEconomicCost = personalTimeCost + commercialTimeCost - fuelCostSaving;
 
   return {
@@ -149,7 +149,7 @@ export function calcCarpooling(params, sliderValue) {
   const dailyFuelSaved = dailyCommuterFuel * vehicleReduction;
 
   // Net benefit from shared fuel costs (30% of fuel savings)
-  const annualEconomicCost = -(dailyFuelSaved * 365 * 2.80 * 0.3);
+  const annualEconomicCost = -(dailyFuelSaved * 365 * params.fuelPricePerLitre * 0.3);
 
   return {
     dailyFuelSaved,
@@ -219,8 +219,10 @@ export function calcEcoDriving(params, sliderValue) {
 
   const dailyFuelSaved = totalDailyFuel * (effectivenessPercent / 100) * 0.5;
 
-  // Campaign cost only
-  const annualEconomicCost = 8_000_000;
+  // Campaign cost minus household fuel cost savings
+  const campaignCost = 8_000_000;
+  const householdFuelSavings = dailyFuelSaved * 365 * params.fuelPricePerLitre;
+  const annualEconomicCost = campaignCost - householdFuelSavings;
 
   return {
     dailyFuelSaved,
