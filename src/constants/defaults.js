@@ -176,7 +176,7 @@ export const MEASURES = [
       label: 'New highway speed limit',
       min: 60,
       max: 100,
-      step: 5,
+      step: 10,
       default: 80,
       unit: 'km/h',
     },

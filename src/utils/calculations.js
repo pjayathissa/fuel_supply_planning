@@ -111,24 +111,9 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
  * 4. Speed Limit Reduction
  * Cumulative fuel savings are looked up directly from the speedLimitFuelSavings
  * table, which accounts for approximate NZ road lengths at each posted speed.
- * Intermediate slider values (e.g. 85) are linearly interpolated.
  */
 export function calcSpeedLimit(params, sliderValue) {
-  const savings = params.speedLimitFuelSavings;
-  const speeds = Object.keys(savings).map(Number).sort((a, b) => b - a); // [100,90,80,70,60]
-
-  // Look up or interpolate the cumulative fuel saving fraction
-  let fuelSavingFraction = 0;
-  if (savings[sliderValue] !== undefined) {
-    fuelSavingFraction = savings[sliderValue];
-  } else {
-    const upper = speeds.find((s) => s >= sliderValue);
-    const lower = speeds.find((s) => s <= sliderValue);
-    if (upper != null && lower != null && upper !== lower) {
-      const t = (upper - sliderValue) / (upper - lower);
-      fuelSavingFraction = savings[upper] + t * (savings[lower] - savings[upper]);
-    }
-  }
+  const fuelSavingFraction = params.speedLimitFuelSavings[sliderValue] || 0;
 
   const totalDailyFuel =
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
