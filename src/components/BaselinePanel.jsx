@@ -68,7 +68,7 @@ export default function BaselinePanel({ params, onParamsChange }) {
           </div>
 
           <div className="baseline-grid">
-            {Object.entries(BASELINE_DEFAULTS).map(([key, config]) => (
+            {Object.entries(BASELINE_DEFAULTS).filter(([, config]) => typeof config.value !== 'object').map(([key, config]) => (
               <div key={key} className="baseline-field">
                 <div className="baseline-field-header">
                   <label className="baseline-field-label">

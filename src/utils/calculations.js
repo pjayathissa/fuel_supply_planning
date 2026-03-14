@@ -109,30 +109,51 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
 
 /**
  * 4. Speed Limit Reduction
- * Lower highway speeds improve fuel efficiency (~1.25% per km/h reduction).
- * Applies only to highway VKT and non-EV vehicles.
+ * Fuel savings are based on per-band analysis accounting for approximate NZ
+ * road lengths at each posted speed (110, 100, 90, 80, 70 km/h).
+ * Each band's saving represents the % of national fuel saved when that speed
+ * band is reduced by 10 km/h. Intermediate slider values interpolate linearly.
  */
 export function calcSpeedLimit(params, sliderValue) {
   const newSpeedLimit = sliderValue;
-  const speedReduction = 100 - newSpeedLimit;
+  const bands = params.speedLimitSavingsByBand;
 
-  // ~1.25% fuel saving per km/h below 100, capped at 25%
-  let fuelEfficiencyGain = speedReduction * 0.0125;
-  fuelEfficiencyGain = Math.min(fuelEfficiencyGain, 0.25);
+  // Sum applicable band savings, with linear interpolation for partial bands
+  let fuelSavingFraction = 0;
+  for (const [speedStr, bandSaving] of Object.entries(bands)) {
+    const originalSpeed = Number(speedStr);
+    if (newSpeedLimit < originalSpeed) {
+      const bandBottom = originalSpeed - 10;
+      if (newSpeedLimit <= bandBottom) {
+        // Full band applies
+        fuelSavingFraction += bandSaving;
+      } else {
+        // Partial band — interpolate
+        fuelSavingFraction += bandSaving * ((originalSpeed - newSpeedLimit) / 10);
+      }
+    }
+  }
 
-  // Apply to highway VKT proportion, excluding EVs
-  const affectedVKTFraction = params.highwayVKTProportion * (1 - params.evFleetShare);
   const totalDailyFuel =
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
-  const dailyFuelSaved = totalDailyFuel * affectedVKTFraction * fuelEfficiencyGain;
+  const dailyFuelSaved = totalDailyFuel * fuelSavingFraction;
 
-  // Travel time cost increase
-  const timeMultiplier = 100 / newSpeedLimit - 1;
-  // Estimate total annual highway VKT from fuel data (rough proxy)
-  // ~45B total VKT/year for NZ
+  // Travel time cost increase (approximate, using weighted speed reduction)
+  // ~45B total VKT/year for NZ; estimate affected VKT from the bands
   const totalAnnualVKT = 45e9;
-  const extraHoursPerYear =
-    ((totalAnnualVKT * params.highwayVKTProportion) / 100) * timeMultiplier;
+  let extraHoursPerYear = 0;
+  for (const [speedStr] of Object.entries(bands)) {
+    const originalSpeed = Number(speedStr);
+    if (newSpeedLimit < originalSpeed) {
+      const effectiveNewSpeed = Math.max(newSpeedLimit, originalSpeed - 10);
+      const actualNewSpeed = newSpeedLimit < originalSpeed - 10 ? newSpeedLimit : effectiveNewSpeed;
+      // Estimate VKT share proportional to fuel saving contribution
+      const bandVKTShare = bands[speedStr] / Object.values(bands).reduce((a, b) => a + b, 0);
+      const totalBandVKT = totalAnnualVKT * bandVKTShare;
+      const timeIncrease = originalSpeed / actualNewSpeed - 1;
+      extraHoursPerYear += (totalBandVKT / originalSpeed) * timeIncrease;
+    }
+  }
   const personalTimeCost = extraHoursPerYear * 0.70 * 27;
   const commercialTimeCost = extraHoursPerYear * 0.30 * 40;
   const fuelCostSaving = dailyFuelSaved * 365 * 2.80;
