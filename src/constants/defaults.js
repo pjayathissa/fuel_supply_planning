@@ -121,7 +121,7 @@ export const MEASURES = [
     description: 'Office workers work from home additional days, eliminating commute fuel use.',
     hasSlider: true,
     sliderConfig: {
-      label: 'Extra WFH days per week',
+      label: 'WFH days per week',
       min: 0.5,
       max: 5,
       step: 0.5,
