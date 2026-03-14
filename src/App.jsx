@@ -73,7 +73,6 @@ export default function App() {
       <main className="main-layout">
         {/* Left column: controls */}
         <div className="controls-column">
-          <BaselinePanel params={params} onParamsChange={setParams} />
           <MeasureList
             measureStates={measureStates}
             onMeasureChange={handleMeasureChange}
@@ -82,6 +81,7 @@ export default function App() {
             params={params}
             onParamsChange={setParams}
           />
+          <BaselinePanel params={params} onParamsChange={setParams} />
 
           {/* Methodology button — mobile only (moves to bottom) */}
           <div className="mobile-methodology">

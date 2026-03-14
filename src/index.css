@@ -342,6 +342,12 @@ h1, h2, h3, h4 {
   gap: var(--space-md);
 }
 
+.measure-list-instruction {
+  font-size: 0.85rem;
+  color: var(--grey-500);
+  margin: calc(-1 * var(--space-sm)) 0 0 0;
+}
+
 .preset-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -1216,6 +1222,12 @@ h1, h2, h3, h4 {
   /* Keep economic metrics row as 2 columns on mobile */
   .results-metrics-row:not(.mobile-hidden) {
     grid-template-columns: 1fr 1fr;
+    gap: var(--space-xs);
+  }
+
+  /* Tighter padding for metric boxes on mobile */
+  .results-metrics-row:not(.mobile-hidden) .result-metric {
+    padding: var(--space-xs) var(--space-sm);
   }
 
   /* Show mobile-only elements */

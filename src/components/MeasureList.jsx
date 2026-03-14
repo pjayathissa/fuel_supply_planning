@@ -14,17 +14,10 @@ export default function MeasureList({
 }) {
   return (
     <div className="measure-list">
-      <h2 className="section-title">Demand Restraint Measures</h2>
-
-      {/* Reset button */}
-      <div className="preset-buttons">
-        <button
-          className="preset-btn preset-btn-reset"
-          onClick={() => onApplyPreset(null)}
-        >
-          Reset All
-        </button>
-      </div>
+      <h2 className="section-title">Select Fuel Saving Measures</h2>
+      <p className="measure-list-instruction">
+        Toggle the inputs below to see the fuel reserve and economic impacts
+      </p>
 
       {/* Measure cards */}
       <div className="measure-cards">
@@ -39,6 +32,16 @@ export default function MeasureList({
             onParamsChange={onParamsChange}
           />
         ))}
+      </div>
+
+      {/* Reset button — after all toggles */}
+      <div className="preset-buttons">
+        <button
+          className="preset-btn preset-btn-reset"
+          onClick={() => onApplyPreset(null)}
+        >
+          Reset All
+        </button>
       </div>
     </div>
   );
