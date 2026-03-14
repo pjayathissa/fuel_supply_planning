@@ -1,4 +1,4 @@
-import { TrendingDown, TrendingUp, DollarSign } from 'lucide-react';
+import { TrendingDown, TrendingUp, DollarSign, BarChart3 } from 'lucide-react';
 import AnimatedNumber from './AnimatedNumber';
 import FuelGauge from './FuelGauge';
 import StackedBarChart from './StackedBarChart';
@@ -32,7 +32,7 @@ function getDollarUnit(value) {
 /**
  * Main results display — always visible, updates dynamically.
  */
-export default function ResultsDashboard({ results, baselineParams }) {
+export default function ResultsDashboard({ results, baselineParams, showChart, onToggleChart }) {
   if (!results) return null;
 
   const {
@@ -59,8 +59,8 @@ export default function ResultsDashboard({ results, baselineParams }) {
         extendedDays={hasActiveMeasures ? extendedReserveDays : baselineDays}
       />
 
-      {/* Secondary metrics row */}
-      <div className="results-metrics-row">
+      {/* Secondary metrics row — hidden on mobile */}
+      <div className="results-metrics-row mobile-hidden">
         <div className="result-metric">
           <TrendingDown size={18} className="metric-icon" />
           <div>
@@ -122,12 +122,20 @@ export default function ResultsDashboard({ results, baselineParams }) {
         </div>
       </div>
 
-      {/* Stacked bar chart */}
-      <StackedBarChart
-        results={results}
-        baselineDays={baselineDays}
-        totalDailyPetrol={totalDailyPetrol}
-      />
+      {/* Chart toggle button — mobile only */}
+      <button className="chart-toggle-btn mobile-only" onClick={onToggleChart}>
+        <BarChart3 size={16} />
+        {showChart ? 'Hide breakdown chart' : 'Show breakdown chart'}
+      </button>
+
+      {/* Stacked bar chart — always visible on desktop, toggleable on mobile */}
+      <div className={`chart-container ${showChart ? 'chart-visible' : ''}`}>
+        <StackedBarChart
+          results={results}
+          baselineDays={baselineDays}
+          totalDailyPetrol={totalDailyPetrol}
+        />
+      </div>
     </div>
   );
 }
