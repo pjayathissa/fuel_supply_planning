@@ -112,6 +112,9 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
 
               {showParams && (
                 <div className="measure-params-content">
+                  <p className="measure-params-warning">
+                    Note: Changing these inputs may affect other initiatives that share the same parameters.
+                  </p>
                   {/* Editable baseline parameters */}
                   {paramKeys.length > 0 && (
                     <div className="measure-params-grid">
