@@ -126,6 +126,67 @@ export const BASELINE_DEFAULTS = {
     label: 'Fuel price per litre',
     tooltip: 'Average retail fuel price used to estimate household cost savings. Source: MBIE weekly fuel price monitoring.',
   },
+  personalTimeCostPerHour: {
+    value: 30,
+    unit: 'NZ$/hour',
+    label: 'Personal time cost',
+    tooltip: 'Value of unproductive personal travel time per hour. Used in PT mode shift and speed limit calculations.',
+  },
+  commercialTimeCostPerHour: {
+    value: 40,
+    unit: 'NZ$/hour',
+    label: 'Commercial time cost',
+    tooltip: 'Value of commercial/freight travel time per hour. Used in speed limit reduction calculations.',
+  },
+  carFreeSundayWelfareCost: {
+    value: 75_000_000,
+    unit: 'NZ$/year',
+    label: 'Car-free Sunday welfare cost',
+    tooltip: 'Annual consumer welfare loss per frequency unit from restricted recreational trips and retail impact.',
+    displayDivisor: 1e6,
+  },
+  carFreeSundayComplianceFactor: {
+    value: 0.75,
+    unit: '%',
+    label: 'Car-free Sunday compliance',
+    tooltip: 'Proportion of drivers who comply with car-free restrictions in affected cities.',
+    displayMultiplier: 100,
+  },
+  oddEvenGDPImpactPct: {
+    value: 0.004,
+    unit: '%',
+    label: 'Odd/even GDP impact',
+    tooltip: 'Economic disruption from odd/even plate restrictions as a fraction of GDP.',
+    displayMultiplier: 100,
+  },
+  ecoDrivingCampaignCost: {
+    value: 8_000_000,
+    unit: 'NZ$/year',
+    label: 'Eco-driving campaign cost',
+    tooltip: 'Annual cost of public education and outreach campaign for fuel-efficient driving.',
+    displayDivisor: 1e6,
+  },
+  urbanFreightDieselShare: {
+    value: 0.25,
+    unit: '%',
+    label: 'Urban freight diesel share',
+    tooltip: 'Proportion of total diesel consumption attributable to urban freight.',
+    displayMultiplier: 100,
+  },
+  freightLogisticsCostPer2Pct: {
+    value: 50_000_000,
+    unit: 'NZ$',
+    label: 'Freight logistics cost per 2% reduction',
+    tooltip: 'Logistics reorganisation cost for each 2 percentage points of urban freight fuel reduction.',
+    displayDivisor: 1e6,
+  },
+  fuelCapAdminCost: {
+    value: 20_000_000,
+    unit: 'NZ$/year',
+    label: 'Fuel cap admin cost',
+    tooltip: 'Annual administrative cost for enforcing fuel purchase cap compliance.',
+    displayDivisor: 1e6,
+  },
 };
 
 // Total commuters derived from office car commuters + PT + active mode shares
@@ -145,16 +206,16 @@ export const getTotalCommuters = (params) => {
  * Used to show relevant editable parameters on each measure card.
  */
 export const MEASURE_PARAMS = {
-  wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays', 'annualGDP'],
-  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays'],
+  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
-  speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'fuelPricePerLitre'],
+  speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
   carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
-  carFreeSundays: ['dailyPetrolConsumption', 'annualGDP'],
-  oddEvenPlates: ['dailyPetrolConsumption', 'oddEvenReductionFactor', 'annualGDP'],
-  ecoDriving: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'fuelPricePerLitre'],
-  freightConsolidation: ['dailyDieselConsumption', 'fuelPricePerLitre'],
-  fuelPurchaseCaps: [],
+  carFreeSundays: ['dailyPetrolConsumption', 'carFreeSundayComplianceFactor', 'carFreeSundayWelfareCost'],
+  oddEvenPlates: ['dailyPetrolConsumption', 'oddEvenReductionFactor', 'oddEvenGDPImpactPct'],
+  ecoDriving: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'ecoDrivingCampaignCost', 'fuelPricePerLitre'],
+  freightConsolidation: ['dailyDieselConsumption', 'urbanFreightDieselShare', 'freightLogisticsCostPer2Pct', 'fuelPricePerLitre'],
+  fuelPurchaseCaps: ['fuelCapAdminCost'],
 };
 
 /**
@@ -169,7 +230,6 @@ export const MEASURE_ASSUMPTIONS = {
   ],
   publicTransport: [
     'PT adds ~20 min/day to commute; 60% of that time is productive → 40% is unproductive time cost',
-    'Value of unproductive time: $30/hour',
     '230 working days/year (adjusted for WFH if active)',
     'Congestion benefit applied per car removed from the road',
   ],
@@ -182,7 +242,7 @@ export const MEASURE_ASSUMPTIONS = {
   speedLimit: [
     'Fuel savings looked up from pre-computed table accounting for NZ road lengths at each speed band',
     'Total annual VKT assumed at 45 billion km',
-    'Time cost split: 70% personal ($27/hr), 30% commercial ($40/hr)',
+    'Time cost split: 70% personal, 30% commercial',
     'Average affected speed assumed at 90 km/h for time cost calculation',
   ],
   carpooling: [
@@ -193,27 +253,21 @@ export const MEASURE_ASSUMPTIONS = {
   carFreeSundays: [
     'Sunday accounts for ~12% of weekly petrol consumption',
     '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
-    '75% compliance factor',
-    'Consumer welfare loss: $75M/year per frequency unit (weekly=1, fortnightly=0.5, monthly=0.23)',
+    'Frequency: weekly=1, fortnightly=0.5, monthly=0.23',
   ],
   oddEvenPlates: [
-    'Net ~40% reduction after accounting for carpooling and PT substitution',
-    'Significant disruption — economic cost modelled as ~0.4% of GDP',
     'Applied to all private vehicles, not just commuters',
   ],
   ecoDriving: [
     '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
-    'Campaign cost: $8M/year for public education and outreach',
     'Net cost offset by household fuel savings',
   ],
   freightConsolidation: [
-    'Urban freight = 25% of total diesel consumption',
-    'Logistics reorganisation cost: $50M per 2% reduction (scales linearly)',
     'Consolidation applies to urban deliveries and off-peak shifting',
+    'Logistics cost scales linearly with reduction percentage',
   ],
   fuelPurchaseCaps: [
     'No direct fuel saving — demand smoothing only',
-    'Administrative cost: $20M/year for enforcement and compliance',
     'Prevents panic buying and improves distribution equity',
   ],
 };
