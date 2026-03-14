@@ -114,7 +114,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
               {costPerExtraDay < 0 ? 'Saving per reserve day' : 'Cost per reserve day'}
             </div>
             <div className="metric-value">
-              {hasActiveMeasures && extraDays > 0 ? formatDollars(costPerExtraDay) : '—'}
+              {hasActiveMeasures && extraDays > 0 ? formatDollars(Math.abs(costPerExtraDay)) : '—'}
             </div>
           </div>
         </div>
