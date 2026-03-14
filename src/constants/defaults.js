@@ -114,6 +114,13 @@ export const BASELINE_DEFAULTS = {
     tooltip: 'Net reduction in petrol use from odd/even plate restrictions, after accounting for carpooling and PT substitution.',
     displayMultiplier: 100,
   },
+  productivePtTimeFraction: {
+    value: 0.60,
+    unit: '%',
+    label: 'Productive PT travel time',
+    tooltip: 'Fraction of additional public transport commute time that is productive (e.g. reading, working). The remaining fraction is valued as unproductive time cost.',
+    displayMultiplier: 100,
+  },
   congestionBenefitPerCar: {
     value: 15,
     unit: 'NZ$/day',
@@ -207,8 +214,8 @@ export const getTotalCommuters = (params) => {
  */
 export const MEASURE_PARAMS = {
   wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays'],
-  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
-  cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
+  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
   carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
   carFreeSundays: ['dailyPetrolConsumption', 'carFreeSundayComplianceFactor', 'carFreeSundayWelfareCost'],
@@ -229,7 +236,7 @@ export const MEASURE_ASSUMPTIONS = {
     'Additional WFH days compared against current baseline office attendance',
   ],
   publicTransport: [
-    'PT adds ~20 min/day to commute; 60% of that time is productive → 40% is unproductive time cost',
+    'PT adds ~20 min/day to commute; productive fraction is adjustable → remainder is unproductive time cost',
     '230 working days/year (adjusted down if WFH is active)',
     'Congestion benefit applied per car removed from the road',
   ],
@@ -237,6 +244,7 @@ export const MEASURE_ASSUMPTIONS = {
     '0.85× discount — active commuters tend to have shorter trips',
     'Health benefit: 1.5 fewer sick days at $350/day per shifted commuter',
     'Household fuel savings counted as economic benefit',
+    'Congestion benefit applied per car removed from the road',
     '230 working days/year (adjusted down if WFH is active)',
   ],
   speedLimit: [
