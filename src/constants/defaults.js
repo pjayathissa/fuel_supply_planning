@@ -107,6 +107,19 @@ export const BASELINE_DEFAULTS = {
     tooltip: 'Battery electric vehicles as proportion of NZ light vehicle fleet. Source: MoT.',
     displayMultiplier: 100,
   },
+  oddEvenReductionFactor: {
+    value: 0.40,
+    unit: '%',
+    label: 'Odd/even plate petrol reduction',
+    tooltip: 'Net reduction in petrol use from odd/even plate restrictions, after accounting for carpooling and PT substitution.',
+    displayMultiplier: 100,
+  },
+  congestionBenefitPerCar: {
+    value: 15,
+    unit: 'NZ$/day',
+    label: 'Congestion benefit per car removed',
+    tooltip: 'Estimated daily economic benefit per car removed from the road due to reduced congestion.',
+  },
 };
 
 // Total commuters derived from office car commuters + PT + active mode shares
@@ -216,7 +229,6 @@ export const MEASURES = [
     id: 'oddEvenPlates',
     name: 'Odd/Even Plate Restrictions',
     description: 'Vehicles with odd plates drive on odd-dated days, even on even. Approximately halves vehicles on road on any given day.',
-    isEmergency: true,
     hasSlider: false,
   },
   {

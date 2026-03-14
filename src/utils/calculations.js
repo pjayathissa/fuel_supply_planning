@@ -64,8 +64,7 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   const workingDaysPerYear = 230 * commutingFraction;
   const annualTimeCost = extraHoursPerDay * 30 * workingDaysPerYear;
 
-  // Congestion benefit: ~$15/day per car removed from the road
-  const congestionBenefit = shiftedCommuters * 15 * workingDaysPerYear;
+  const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;
 
   const annualEconomicCost = annualTimeCost - congestionBenefit;
 
@@ -141,15 +140,13 @@ export function calcSpeedLimit(params, sliderValue) {
 /**
  * 5. Carpooling
  * Higher occupancy → fewer car trips needed.
- * Commuter trips ≈ 20% of all petrol use.
  */
 export function calcCarpooling(params, sliderValue) {
   const targetOccupancy = sliderValue;
   const vehicleReduction = 1 - params.avgCarOccupancy / targetOccupancy;
 
-  const commuterPetrolShare = 0.20;
-  const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
-  const dailyFuelSaved = totalDailyPetrol * commuterPetrolShare * vehicleReduction;
+  const dailyCommuterFuel = params.officeCarCommuters * params.avgCommuteFuel;
+  const dailyFuelSaved = dailyCommuterFuel * vehicleReduction;
 
   // Net benefit from shared fuel costs (30% of fuel savings)
   const annualEconomicCost = -(dailyFuelSaved * 365 * 2.80 * 0.3);
@@ -193,19 +190,12 @@ export function calcCarFreeSundays(params, sliderValue) {
 /**
  * 7. Odd/Even Plate Restrictions
  * Binary measure — roughly halves vehicles on road.
- * In practice ~35% commuter reduction, ~40% discretionary reduction.
+ * Plate restrictions apply to all private vehicles, not just commuters.
+ * Net ~40% reduction after accounting for carpooling and PT substitution.
  */
 export function calcOddEvenPlates(params) {
-  const commuterReduction = 0.35;
-  const discretionaryReduction = 0.40;
-  const commuterPetrolShare = 0.20;
-  const discretionaryPetrolShare = 0.35;
-
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
-  const dailyFuelSaved =
-    totalDailyPetrol *
-    (commuterPetrolShare * commuterReduction +
-      discretionaryPetrolShare * discretionaryReduction);
+  const dailyFuelSaved = totalDailyPetrol * params.oddEvenReductionFactor;
 
   // Significant disruption — ~0.4% of GDP
   const annualEconomicCost = params.annualGDP * 0.004;
