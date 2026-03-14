@@ -140,6 +140,84 @@ export const getTotalCommuters = (params) => {
 /**
  * Measure definitions — configuration for each demand-restraint measure card.
  */
+/**
+ * Maps each measure to the baseline parameter keys it depends on.
+ * Used to show relevant editable parameters on each measure card.
+ */
+export const MEASURE_PARAMS = {
+  wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays', 'annualGDP'],
+  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
+  speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'fuelPricePerLitre'],
+  carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
+  carFreeSundays: ['dailyPetrolConsumption', 'annualGDP'],
+  oddEvenPlates: ['dailyPetrolConsumption', 'oddEvenReductionFactor', 'annualGDP'],
+  ecoDriving: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'fuelPricePerLitre'],
+  freightConsolidation: ['dailyDieselConsumption', 'fuelPricePerLitre'],
+  fuelPurchaseCaps: [],
+};
+
+/**
+ * Methodology assumptions embedded in each measure's calculation.
+ * Displayed in the expandable section of each measure card.
+ */
+export const MEASURE_ASSUMPTIONS = {
+  wfh: [
+    '15% rebound factor — WFH workers still make some non-commute trips on WFH days',
+    'Economic cost modelled as non-linear (cubic polynomial) based on productivity research',
+    'Additional WFH days compared against current baseline office attendance',
+  ],
+  publicTransport: [
+    'PT adds ~20 min/day to commute; 60% of that time is productive → 40% is unproductive time cost',
+    'Value of unproductive time: $30/hour',
+    '230 working days/year (adjusted for WFH if active)',
+    'Congestion benefit applied per car removed from the road',
+  ],
+  cycling: [
+    '0.85× discount — active commuters tend to have shorter trips',
+    'Health benefit: 1.5 fewer sick days at $350/day per shifted commuter',
+    'Household fuel savings counted as economic benefit',
+    '230 working days/year (adjusted for WFH if active)',
+  ],
+  speedLimit: [
+    'Fuel savings looked up from pre-computed table accounting for NZ road lengths at each speed band',
+    'Total annual VKT assumed at 45 billion km',
+    'Time cost split: 70% personal ($27/hr), 30% commercial ($40/hr)',
+    'Average affected speed assumed at 90 km/h for time cost calculation',
+  ],
+  carpooling: [
+    'Vehicle reduction = 1 − (baseline occupancy / target occupancy)',
+    'Net economic benefit estimated as 30% of household fuel cost savings',
+    'Applied to all car commuters (office workers who drive)',
+  ],
+  carFreeSundays: [
+    'Sunday accounts for ~12% of weekly petrol consumption',
+    '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
+    '75% compliance factor',
+    'Consumer welfare loss: $75M/year per frequency unit (weekly=1, fortnightly=0.5, monthly=0.23)',
+  ],
+  oddEvenPlates: [
+    'Net ~40% reduction after accounting for carpooling and PT substitution',
+    'Significant disruption — economic cost modelled as ~0.4% of GDP',
+    'Applied to all private vehicles, not just commuters',
+  ],
+  ecoDriving: [
+    '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
+    'Campaign cost: $8M/year for public education and outreach',
+    'Net cost offset by household fuel savings',
+  ],
+  freightConsolidation: [
+    'Urban freight = 25% of total diesel consumption',
+    'Logistics reorganisation cost: $50M per 2% reduction (scales linearly)',
+    'Consolidation applies to urban deliveries and off-peak shifting',
+  ],
+  fuelPurchaseCaps: [
+    'No direct fuel saving — demand smoothing only',
+    'Administrative cost: $20M/year for enforcement and compliance',
+    'Prevents panic buying and improves distribution equity',
+  ],
+};
+
 export const MEASURES = [
   {
     id: 'wfh',

@@ -51,7 +51,7 @@ export default function BaselinePanel({ params, onParamsChange }) {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <span className="baseline-toggle-text">
-          Baseline Parameters
+          Baseline Inputs
           <span className="baseline-toggle-hint">
             {isExpanded ? '' : '(click to customize)'}
           </span>
