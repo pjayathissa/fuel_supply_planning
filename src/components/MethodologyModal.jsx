@@ -95,12 +95,15 @@ export default function MethodologyModal({ isOpen, onClose }) {
 
             <h4>4. Speed Limit Reduction</h4>
             <p>
-              Reduced highway speeds improve fuel efficiency through lower
-              aerodynamic drag — approximately 1.25% fuel saving per km/h
-              reduction below 100, capped at 25%. Only applies to the 30% of VKT
-              on roads posted at 100 km/h, excluding EVs (5.5% of fleet). Economic
-              cost is the value of lost travel time (70% personal at $27/hr, 30%
-              commercial at $40/hr), offset by fuel cost savings.
+              Fuel savings are calculated per speed band, weighted by
+              approximate road lengths at each posted speed in New Zealand.
+              Reducing each band by 10 km/h saves: 110→100: ~0.1% of national
+              fuel (very few roads at 110 km/h), 100→90: ~3.1% (the largest
+              lever — roughly 41% of all VKT), 90→80: ~2.5%, 80→70: ~2.5%,
+              and 70→60: ~1.4% (diminishing returns below the efficiency sweet
+              spot). Cumulative savings are summed for the selected speed limit.
+              Economic cost is the value of lost travel time (70% personal at
+              $27/hr, 30% commercial at $40/hr), offset by fuel cost savings.
             </p>
 
             <h4>5. Carpooling</h4>

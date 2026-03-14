@@ -86,12 +86,19 @@ export const BASELINE_DEFAULTS = {
     tooltip: '~$410B NZ nominal GDP estimate for 2025/26. Source: Treasury HYEFU.',
     displayDivisor: 1e9,
   },
-  highwayVKTProportion: {
-    value: 0.30,
-    unit: '%',
-    label: 'Highway VKT proportion',
-    tooltip: '30% of total vehicle kilometres travelled on roads posted at 100 km/h.',
-    displayMultiplier: 100,
+  speedLimitFuelSavings: {
+    value: {
+      100: 0.001,
+      90: 0.032,
+      80: 0.057,
+      70: 0.082,
+      60: 0.096,
+    },
+    label: 'Cumulative fuel savings by new speed limit (% of national fuel)',
+    tooltip:
+      'Cumulative % of national fuel saved when all roads above the given speed are ' +
+      'reduced to that limit, accounting for approximate road lengths at each posted speed. ' +
+      '100: 0.1%, 90: 3.2%, 80: 5.7%, 70: 8.2%, 60: 9.6%.',
   },
   evFleetShare: {
     value: 0.055,
@@ -162,14 +169,14 @@ export const MEASURES = [
   {
     id: 'speedLimit',
     name: 'Speed Limit Reduction',
-    description: 'Reduced highway speeds improve fuel efficiency through lower aerodynamic drag.',
-    note: 'Applies to non-EV vehicles on roads currently posted at 100 km/h.',
+    description: 'Lower speed limits reduce fuel consumption. Savings are weighted by road lengths at each posted speed.',
+    note: 'Accounts for approximate NZ road lengths at each speed band (110, 100, 90, 80, 70 km/h).',
     hasSlider: true,
     sliderConfig: {
       label: 'New highway speed limit',
       min: 60,
       max: 100,
-      step: 5,
+      step: 10,
       default: 80,
       unit: 'km/h',
     },

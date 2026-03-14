@@ -109,30 +109,23 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
 
 /**
  * 4. Speed Limit Reduction
- * Lower highway speeds improve fuel efficiency (~1.25% per km/h reduction).
- * Applies only to highway VKT and non-EV vehicles.
+ * Cumulative fuel savings are looked up directly from the speedLimitFuelSavings
+ * table, which accounts for approximate NZ road lengths at each posted speed.
  */
 export function calcSpeedLimit(params, sliderValue) {
-  const newSpeedLimit = sliderValue;
-  const speedReduction = 100 - newSpeedLimit;
+  const fuelSavingFraction = params.speedLimitFuelSavings[sliderValue] || 0;
 
-  // ~1.25% fuel saving per km/h below 100, capped at 25%
-  let fuelEfficiencyGain = speedReduction * 0.0125;
-  fuelEfficiencyGain = Math.min(fuelEfficiencyGain, 0.25);
-
-  // Apply to highway VKT proportion, excluding EVs
-  const affectedVKTFraction = params.highwayVKTProportion * (1 - params.evFleetShare);
   const totalDailyFuel =
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
-  const dailyFuelSaved = totalDailyFuel * affectedVKTFraction * fuelEfficiencyGain;
+  const dailyFuelSaved = totalDailyFuel * fuelSavingFraction;
 
-  // Travel time cost increase
-  const timeMultiplier = 100 / newSpeedLimit - 1;
-  // Estimate total annual highway VKT from fuel data (rough proxy)
-  // ~45B total VKT/year for NZ
+  // Travel time cost (approximate — assume average affected speed is 90 km/h)
   const totalAnnualVKT = 45e9;
+  const affectedVKTShare = fuelSavingFraction / 0.096; // proportion of affected roads
+  const avgOriginalSpeed = 90;
+  const timeIncrease = avgOriginalSpeed / sliderValue - 1;
   const extraHoursPerYear =
-    ((totalAnnualVKT * params.highwayVKTProportion) / 100) * timeMultiplier;
+    ((totalAnnualVKT * affectedVKTShare) / avgOriginalSpeed) * timeIncrease;
   const personalTimeCost = extraHoursPerYear * 0.70 * 27;
   const commercialTimeCost = extraHoursPerYear * 0.30 * 40;
   const fuelCostSaving = dailyFuelSaved * 365 * 2.80;
