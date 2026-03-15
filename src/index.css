@@ -445,6 +445,19 @@ h1, h2, h3, h4 {
   flex-shrink: 0;
 }
 
+.measure-long-term-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--navy);
+  background: var(--grey-100);
+  border: 1px solid var(--grey-300);
+  border-radius: 4px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
 /* Toggle switch */
 .toggle-switch {
   position: relative;

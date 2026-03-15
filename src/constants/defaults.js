@@ -6,15 +6,15 @@
 
 export const BASELINE_DEFAULTS = {
   onshoreReserveDays: {
-    value: 33,
+    value: 27,
     unit: 'days',
-    label: 'Onshore petrol reserve',
-    tooltip: 'Current onshore petrol stockholding in days of cover. Source: MBIE weekly fuel stock report, March 2026.',
+    label: 'Onshore fuel reserve',
+    tooltip: 'Current onshore fuel stockholding in days of cover. Source: MBIE weekly fuel stock report, March 2026.',
   },
   totalReserveDays: {
     value: 58,
     unit: 'days',
-    label: 'Total petrol reserve (incl. on water)',
+    label: 'Total fuel reserve (incl. on water)',
     tooltip: 'Includes fuel on vessels en route to NZ. Source: MBIE March 2026.',
   },
   dailyPetrolConsumption: {
@@ -26,8 +26,8 @@ export const BASELINE_DEFAULTS = {
   dailyDieselConsumption: {
     value: 8.2,
     unit: 'million litres/day',
-    label: 'Daily diesel consumption',
-    tooltip: 'Derived from MBIE annual diesel supply data (~3.0B litres/year).',
+    label: 'Daily diesel consumption (transport)',
+    tooltip: 'Transport diesel only (~3.0B litres/year). Total national diesel including industrial/heating is higher (~10.2M L/day). Source: MBIE annual diesel supply data.',
   },
   officeCarCommuters: {
     value: 935000,
@@ -80,10 +80,10 @@ export const BASELINE_DEFAULTS = {
     tooltip: 'NZ commute average vehicle occupancy. Source: MoT Household Travel Survey.',
   },
   annualGDP: {
-    value: 410e9,
+    value: 450e9,
     unit: 'NZ$ billion',
     label: 'NZ annual GDP',
-    tooltip: '~$410B NZ nominal GDP estimate for 2025/26. Source: Treasury HYEFU.',
+    tooltip: '~$450B NZ nominal GDP estimate for 2025/26. Source: Treasury HYEFU 2025.',
     displayDivisor: 1e9,
   },
   speedLimitFuelSavings: {
@@ -100,6 +100,13 @@ export const BASELINE_DEFAULTS = {
       'reduced to that limit, accounting for approximate road lengths at each posted speed. ' +
       '100: 0.1%, 90: 3.2%, 80: 5.7%, 70: 8.2%, 60: 9.6%.',
   },
+  annualVKT: {
+    value: 49e9,
+    unit: 'billion km',
+    label: 'Total annual VKT',
+    tooltip: 'Total vehicle kilometres travelled per year on NZ roads. Source: MoT/NZTA VKT data (12 months to September 2024).',
+    displayDivisor: 1e9,
+  },
   evFleetShare: {
     value: 0.055,
     unit: '%',
@@ -108,10 +115,10 @@ export const BASELINE_DEFAULTS = {
     displayMultiplier: 100,
   },
   oddEvenReductionFactor: {
-    value: 0.40,
+    value: 0.22,
     unit: '%',
     label: 'Odd/even plate petrol reduction',
-    tooltip: 'Net reduction in petrol use from odd/even plate restrictions, after accounting for carpooling and PT substitution.',
+    tooltip: 'Net reduction in petrol use from odd/even plate restrictions, after accounting for carpooling and PT substitution. International evidence suggests 10-25% in practice.',
     displayMultiplier: 100,
   },
   productivePtTimeFraction: {
@@ -216,12 +223,13 @@ export const MEASURE_PARAMS = {
   wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays'],
   publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
-  speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
+  speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'annualVKT', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
   carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
   carFreeSundays: ['dailyPetrolConsumption', 'carFreeSundayComplianceFactor', 'carFreeSundayWelfareCost'],
   oddEvenPlates: ['dailyPetrolConsumption', 'oddEvenReductionFactor', 'oddEvenGDPImpactPct'],
   ecoDriving: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'ecoDrivingCampaignCost', 'fuelPricePerLitre'],
   freightConsolidation: ['dailyDieselConsumption', 'urbanFreightDieselShare', 'freightLogisticsCostPer2Pct', 'fuelPricePerLitre'],
+  evFleetShare: ['evFleetShare'],
   fuelPurchaseCaps: ['fuelCapAdminCost'],
 };
 
@@ -249,7 +257,8 @@ export const MEASURE_ASSUMPTIONS = {
   ],
   speedLimit: [
     'Fuel savings looked up from pre-computed table accounting for NZ road lengths at each speed band',
-    'Total annual VKT assumed at 45 billion km',
+    'Total annual VKT is a configurable parameter (default 49 billion km, source: MoT 2024)',
+    'Time cost computed per speed band (110, 100, 90, 80, 70 km/h) with road-length weighting',
     'Time cost split: 70% personal, 30% commercial',
     'Reduction to 100km/h has only a small impact as there are only a few km of road at 110km/h',
   ],
@@ -262,7 +271,8 @@ export const MEASURE_ASSUMPTIONS = {
   ],
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
-    'Diffult to quantify - please adjust input variables',
+    'International evidence suggests 10-25% reduction in practice (default 22%)',
+    'Difficult to quantify — please adjust input variables',
   ],
   ecoDriving: [
     '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
@@ -271,6 +281,12 @@ export const MEASURE_ASSUMPTIONS = {
   freightConsolidation: [
     'Consolidation applies to urban deliveries and off-peak shifting',
     'Logistics cost scales linearly with reduction percentage',
+  ],
+  evFleetShare: [
+    'This is a long-term structural policy, not a quick fix for the current crisis',
+    'Higher EV share reduces the ICE (petrol) fleet, lowering baseline petrol demand',
+    'Feeds into commuter-based measures — fewer ICE commuters means less petrol savings available',
+    'Does not directly save fuel day-to-day; instead adjusts the baseline consumption downward',
   ],
   fuelPurchaseCaps: [
     'No direct fuel saving — demand smoothing only',
@@ -404,6 +420,22 @@ export const MEASURES = [
       unit: '%',
       isPercentage: true,
     },
+  },
+  {
+    id: 'evFleetShare',
+    name: 'EV Fleet Share',
+    description: 'Adjust the share of the light vehicle fleet that is electric. EVs displace petrol demand, reducing the fuel savings available from other commuter-based measures. Note: this is a long-term structural shift, not a quick-fix crisis measure.',
+    hasSlider: true,
+    sliderConfig: {
+      label: 'EV share of light fleet',
+      min: 5,
+      max: 50,
+      step: 1,
+      default: 6,
+      unit: '%',
+      isPercentage: true,
+    },
+    isLongTerm: true,
   },
   {
     id: 'fuelPurchaseCaps',

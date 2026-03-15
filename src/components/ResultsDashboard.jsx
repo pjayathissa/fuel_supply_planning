@@ -38,7 +38,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
   const {
     extendedReserveDays,
     extraDays,
-    petrolDemandReduction,
+    combinedDemandReduction,
     combinedDailyFuelSaved,
     totalAnnualCost,
     costPerExtraDay,
@@ -47,6 +47,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
 
   const baselineDays = baselineParams.onshoreReserveDays;
   const totalDailyPetrol = baselineParams.dailyPetrolConsumption * 1e6;
+  const totalDailyFuel = totalDailyPetrol + baselineParams.dailyDieselConsumption * 1e6;
   const hasActiveMeasures = activeMeasureCount > 0;
 
   return (
@@ -67,7 +68,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
             <div className="metric-label">Demand reduction</div>
             <div className="metric-value">
               <AnimatedNumber
-                value={hasActiveMeasures ? petrolDemandReduction * 100 : 0}
+                value={hasActiveMeasures ? combinedDemandReduction * 100 : 0}
                 formatter={(v) => `${v.toFixed(1)}%`}
               />
             </div>
@@ -131,7 +132,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
         <StackedBarChart
           results={results}
           baselineDays={baselineDays}
-          totalDailyPetrol={totalDailyPetrol}
+          totalDailyFuel={totalDailyFuel}
         />
       </div>
     </div>
