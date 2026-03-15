@@ -46,8 +46,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
   } = results;
 
   const baselineDays = baselineParams.onshoreReserveDays;
-  const totalDailyPetrol = baselineParams.dailyPetrolConsumption * 1e6;
-  const totalDailyFuel = totalDailyPetrol + baselineParams.dailyDieselConsumption * 1e6;
+  const totalDailyFuel = baselineParams.dailyPetrolConsumption * 1e6 + baselineParams.dailyDieselConsumption * 1e6;
   const hasActiveMeasures = activeMeasureCount > 0;
 
   return (

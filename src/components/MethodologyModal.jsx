@@ -164,8 +164,16 @@ export default function MethodologyModal({ isOpen, onClose }) {
               also feeds into commuter-based measures — fewer ICE commuters means
               the pool of petrol savings from WFH, PT, cycling, and carpooling is
               proportionally smaller (the model applies an ICE fraction discount
-              automatically). No direct economic cost is modelled as EV transition
-              costs are borne by consumers over time.
+              automatically).
+            </p>
+            <p>
+              The economic model accounts for per-vehicle costs (upfront price
+              premium ~$12k amortised at $1,200/yr, grid infrastructure ~$500/yr)
+              and benefits (running cost savings ~$2,000/yr from cheaper fuel and
+              lower maintenance, plus ~$1,500/yr in avoided fuel imports improving
+              NZ's trade balance). Net result is ~$1,800/yr benefit per additional
+              EV. Sources: Rewiring Aotearoa, EECA, Canstar NZ, Concept
+              Consulting/Retyna V2G study, Transpower grid investment estimates.
             </p>
 
             <h4>11. Fuel Purchase Caps</h4>

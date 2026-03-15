@@ -132,14 +132,20 @@ export function calcSpeedLimit(params, sliderValue) {
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
   const dailyFuelSaved = totalDailyFuel * fuelSavingFraction;
 
-  // Per-band time cost: only bands above the new limit are affected
+  // Per-band time cost: iterate each speed zone and compute extra travel time
+  // for bands above the new limit (lower bands are unaffected)
   const totalAnnualVKT = params.annualVKT;
   let extraHoursPerYear = 0;
   for (const [speedStr, vktShare] of Object.entries(SPEED_BAND_VKT_SHARE)) {
+    // Convert the object key (e.g. "100") from string to integer for arithmetic
     const originalSpeed = parseInt(speedStr, 10);
-    if (originalSpeed <= sliderValue) continue; // this band is not affected
+    // Skip bands at or below the new limit — these roads are unaffected
+    if (originalSpeed <= sliderValue) continue;
+    // Total km driven per year on roads in this speed band
     const bandVKT = totalAnnualVKT * vktShare;
+    // Fractional increase in travel time: e.g. 100→80 = 100/80 - 1 = 0.25 (25% longer)
     const timeIncrease = originalSpeed / sliderValue - 1;
+    // Extra hours = (km at original speed → hours) × fractional time increase
     extraHoursPerYear += (bandVKT / originalSpeed) * timeIncrease;
   }
 
@@ -287,7 +293,22 @@ export function calcFuelPurchaseCaps(params) {
  * vehicle fleet that is electric. This is a structural measure, not a crisis
  * response. The slider sets a target EV share; the saving is the difference
  * between current and target share applied to total petrol consumption.
+ *
+ * Economic cost per additional EV (annualised):
+ *   Costs:  upfront price premium ~$12k amortised over 10yr = $1,200/yr
+ *           grid infrastructure (distribution upgrades)     = $500/yr
+ *   Benefits: running cost savings (fuel + maintenance)     = $2,000/yr
+ *             avoided fuel imports (trade balance benefit)   = $1,500/yr
+ *   Net: ~$1,800/yr benefit per additional EV
+ *
+ * Sources: Rewiring Aotearoa, EECA, Concept Consulting/Retyna V2G study,
+ *          Canstar NZ, Drive Electric, Transpower grid investment estimates.
  */
+const EV_UPFRONT_PREMIUM_PER_YEAR = 1200;   // $12k premium amortised over 10 years
+const EV_GRID_COST_PER_YEAR = 500;          // distribution/infrastructure per EV
+const EV_RUNNING_SAVINGS_PER_YEAR = 2000;   // fuel + maintenance savings vs ICE
+const EV_IMPORT_DISPLACEMENT_PER_YEAR = 1500; // avoided petrol import (trade balance)
+
 export function calcEvFleetShare(params, sliderValue) {
   const targetEvShare = sliderValue / 100;
   const currentEvShare = params.evFleetShare;
@@ -297,9 +318,14 @@ export function calcEvFleetShare(params, sliderValue) {
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
   const dailyFuelSaved = totalDailyPetrol * additionalEvShare;
 
-  // No direct economic cost modelled — EV transition costs are borne by consumers
-  // over time and are outside the scope of crisis demand management
-  const annualEconomicCost = 0;
+  // Number of additional EVs beyond current fleet
+  const additionalEVs = additionalEvShare * params.lightVehicleFleet;
+
+  // Net annual economic impact per EV: costs minus benefits (negative = net benefit)
+  const netCostPerEV =
+    (EV_UPFRONT_PREMIUM_PER_YEAR + EV_GRID_COST_PER_YEAR)
+    - (EV_RUNNING_SAVINGS_PER_YEAR + EV_IMPORT_DISPLACEMENT_PER_YEAR);
+  const annualEconomicCost = additionalEVs * netCostPerEV;
 
   return {
     dailyFuelSaved,

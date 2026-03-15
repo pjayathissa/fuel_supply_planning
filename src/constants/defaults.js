@@ -114,6 +114,13 @@ export const BASELINE_DEFAULTS = {
     tooltip: 'Battery electric vehicles as proportion of NZ light vehicle fleet. Source: MoT.',
     displayMultiplier: 100,
   },
+  lightVehicleFleet: {
+    value: 3_500_000,
+    unit: 'vehicles',
+    label: 'Light vehicle fleet size',
+    tooltip: 'Total registered light vehicles in NZ. Source: MoT fleet statistics 2024.',
+    displayDivisor: 1e6,
+  },
   oddEvenReductionFactor: {
     value: 0.22,
     unit: '%',
@@ -229,7 +236,7 @@ export const MEASURE_PARAMS = {
   oddEvenPlates: ['dailyPetrolConsumption', 'oddEvenReductionFactor', 'oddEvenGDPImpactPct'],
   ecoDriving: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'ecoDrivingCampaignCost', 'fuelPricePerLitre'],
   freightConsolidation: ['dailyDieselConsumption', 'urbanFreightDieselShare', 'freightLogisticsCostPer2Pct', 'fuelPricePerLitre'],
-  evFleetShare: ['evFleetShare'],
+  evFleetShare: ['evFleetShare', 'lightVehicleFleet'],
   fuelPurchaseCaps: ['fuelCapAdminCost'],
 };
 
@@ -272,7 +279,6 @@ export const MEASURE_ASSUMPTIONS = {
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
     'International evidence suggests 10-25% reduction in practice (default 22%)',
-    'Difficult to quantify — please adjust input variables',
   ],
   ecoDriving: [
     '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
@@ -286,7 +292,9 @@ export const MEASURE_ASSUMPTIONS = {
     'This is a long-term structural policy, not a quick fix for the current crisis',
     'Higher EV share reduces the ICE (petrol) fleet, lowering baseline petrol demand',
     'Feeds into commuter-based measures — fewer ICE commuters means less petrol savings available',
-    'Does not directly save fuel day-to-day; instead adjusts the baseline consumption downward',
+    'Economic cost: upfront premium ~$1,200/yr + grid costs ~$500/yr per additional EV',
+    'Economic benefit: running savings ~$2,000/yr + avoided fuel imports ~$1,500/yr per EV',
+    'Sources: Rewiring Aotearoa, EECA, Canstar NZ, Transpower grid estimates',
   ],
   fuelPurchaseCaps: [
     'No direct fuel saving — demand smoothing only',
