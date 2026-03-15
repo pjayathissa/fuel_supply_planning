@@ -14,13 +14,15 @@ export default function FuelGauge({ baselineDays, extendedDays }) {
   return (
     <div className="fuel-gauge">
       <div className="fuel-gauge-label-row">
-        <span className="fuel-gauge-label">Onshore reserve</span>
-        <span className="fuel-gauge-days">
-          <AnimatedNumber
-            value={extendedDays}
-            formatter={(v) => v.toFixed(1)}
-          />{' '}
-          days
+        <span className="fuel-gauge-label">
+          Remaining fuel reserves:{' '}
+          <span className="fuel-gauge-days">
+            <AnimatedNumber
+              value={extendedDays}
+              formatter={(v) => v.toFixed(1)}
+            />{' '}
+            days
+          </span>
         </span>
       </div>
 
