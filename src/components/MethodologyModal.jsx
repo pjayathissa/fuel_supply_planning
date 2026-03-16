@@ -25,7 +25,9 @@ export default function MethodologyModal({ isOpen, onClose }) {
               This calculator models the impact of demand-restraint measures on
               New Zealand's fuel reserves during a supply disruption. It estimates
               daily fuel savings, reserve extension, and economic costs for each
-              measure, then combines them with interaction discounts.
+              measure, with cross-measure interactions handled directly in the
+              calculations (e.g., WFH reduces commuting pool for PT/cycling,
+              EV share reduces ICE commuter pool).
             </p>
             <p>
               Since Marsden Point refinery closed in March 2022, New Zealand is
@@ -39,7 +41,8 @@ export default function MethodologyModal({ isOpen, onClose }) {
               The model calculates three outputs for each measure: daily fuel
               saving (litres/day), estimated annual economic cost (NZ$/year), and
               a fuel type indicator. These feed into derived metrics: reserve
-              extension (days), demand reduction (%), and cost-effectiveness.
+              extension (days), combined demand reduction (blended petrol +
+              diesel, weighted by consumption), and cost-effectiveness.
             </p>
           </section>
 
@@ -102,8 +105,11 @@ export default function MethodologyModal({ isOpen, onClose }) {
               lever — roughly 41% of all VKT), 90→80: ~2.5%, 80→70: ~2.5%,
               and 70→60: ~1.4% (diminishing returns below the efficiency sweet
               spot). Cumulative savings are summed for the selected speed limit.
-              Economic cost is the value of lost travel time (70% personal at
-              $27/hr, 30% commercial at $40/hr), offset by fuel cost savings.
+              Time cost is computed per speed band — each affected band's VKT
+              share and original speed determine the additional travel time.
+              Economic cost split: 70% personal at $30/hr, 30% commercial at
+              $40/hr, offset by fuel cost savings. Total annual VKT is
+              configurable (default 49 billion km).
             </p>
 
             <h4>5. Carpooling</h4>
@@ -126,11 +132,12 @@ export default function MethodologyModal({ isOpen, onClose }) {
 
             <h4>7. Odd/Even Plate Restrictions</h4>
             <p>
-              A binary emergency measure. In practice, carpooling and PT
-              substitution mean approximately 35% reduction in commuter petrol use
-              and 40% reduction in discretionary trips. This is one of the most
-              impactful single measures but carries significant economic cost
-              (~0.4% of GDP) due to widespread disruption.
+              A binary emergency measure. International evidence from cities
+              like Jakarta, Delhi, and Athens suggests 10-25% actual reduction
+              in practice, as citizens find workarounds (second cars, exemptions).
+              The default of 22% reflects a mid-range estimate. This is one of
+              the most impactful single measures but carries significant economic
+              cost (~0.4% of GDP) due to widespread disruption.
             </p>
 
             <h4>8. Eco-Driving Campaign</h4>
@@ -149,7 +156,27 @@ export default function MethodologyModal({ isOpen, onClose }) {
               per 2% reduction).
             </p>
 
-            <h4>10. Fuel Purchase Caps</h4>
+            <h4>10. EV Fleet Share</h4>
+            <p>
+              Adjusts the proportion of the light vehicle fleet that is electric.
+              This is a <strong>long-term structural policy</strong>, not a quick-fix
+              crisis measure. A higher EV share reduces baseline petrol demand and
+              also feeds into commuter-based measures — fewer ICE commuters means
+              the pool of petrol savings from WFH, PT, cycling, and carpooling is
+              proportionally smaller (the model applies an ICE fraction discount
+              automatically).
+            </p>
+            <p>
+              The economic model accounts for per-vehicle costs (upfront price
+              premium ~$12k amortised at $1,200/yr, grid infrastructure ~$500/yr)
+              and benefits (running cost savings ~$2,000/yr from cheaper fuel and
+              lower maintenance, plus ~$1,500/yr in avoided fuel imports improving
+              NZ's trade balance). Net result is ~$1,800/yr benefit per additional
+              EV. Sources: Rewiring Aotearoa, EECA, Canstar NZ, Concept
+              Consulting/Retyna V2G study, Transpower grid investment estimates.
+            </p>
+
+            <h4>11. Fuel Purchase Caps</h4>
             <p>
               Per-visit purchase limits (e.g., 40L per vehicle) prevent panic
               buying and smooth demand. This measure contributes zero direct fuel
@@ -165,18 +192,13 @@ export default function MethodologyModal({ isOpen, onClose }) {
               Demand-restraint measures are not perfectly additive. For example,
               someone working from home does not also carpool on that day, and a
               person who has shifted to public transport is already counted once.
-              The model applies a simple interaction discount to the combined fuel
-              savings:
+              Rather than applying a blanket discount, the model handles
+              interactions directly within each calculation:
             </p>
             <ul>
-              <li>3–4 active measures: 10% discount on combined total</li>
-              <li>5+ active measures: 15% discount on combined total</li>
+              <li>WFH days reduce the commuting fraction available for PT and cycling mode shift measures</li>
+              <li>EV fleet share reduces the ICE commuter pool, lowering petrol savings from all commuter-based measures</li>
             </ul>
-            <p>
-              This is a simplifying assumption. A more detailed model would
-              track individual commuter behaviour across all measures to avoid
-              double-counting specific to each measure combination.
-            </p>
           </section>
 
           {/* Limitations */}
@@ -184,12 +206,20 @@ export default function MethodologyModal({ isOpen, onClose }) {
             <h3>Limitations</h3>
             <ul>
               <li>
-                Rebound effects are estimated, not measured — actual behavioural
-                responses may differ significantly.
+                <strong>Jet fuel is excluded</strong> — NZ consumes ~4.3M L/day
+                of jet fuel, with separate reserve obligations (24 days under MSO).
+                Aviation demand reduction would require different policy levers
+                (e.g., flight caps, route rationalisation) and is outside the
+                scope of this tool.
               </li>
               <li>
-                Interaction effects between measures use a simple discount rather
-                than a detailed behavioural model.
+                <strong>Diesel consumption is transport-only</strong> — the 8.2M L/day
+                figure covers road transport diesel. Total national diesel
+                including industrial and heating uses is higher (~10.2M L/day).
+              </li>
+              <li>
+                Rebound effects are estimated, not measured — actual behavioural
+                responses may differ significantly.
               </li>
               <li>
                 Economic costs are order-of-magnitude estimates, not precise GDP
@@ -201,17 +231,14 @@ export default function MethodologyModal({ isOpen, onClose }) {
                 alternatives availability.
               </li>
               <li>
-                The model treats petrol and diesel reserves separately but the UI
-                focuses primarily on petrol.
-              </li>
-              <li>
                 Short-term emergency measures may have different cost profiles
                 than annualised estimates suggest.
               </li>
               <li>
                 The model does not account for supply-side responses (e.g.,
                 rerouted shipments, strategic reserve drawdowns, or diplomatic
-                measures to reopen shipping lanes).
+                measures to reopen shipping lanes). This is a demand-side
+                analysis tool only.
               </li>
             </ul>
           </section>

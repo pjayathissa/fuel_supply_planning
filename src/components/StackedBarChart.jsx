@@ -19,6 +19,7 @@ const MEASURE_COLOURS = {
   oddEvenPlates: '#DC2626',
   ecoDriving: '#14B8A6',
   freightConsolidation: '#F97316',
+  evFleetShare: '#3B82F6',
   fuelPurchaseCaps: '#94A3B8',
 };
 
@@ -26,7 +27,7 @@ const MEASURE_COLOURS = {
  * Horizontal bar chart showing each active measure's contribution
  * to fuel reserve extension.
  */
-export default function StackedBarChart({ results, baselineDays, totalDailyPetrol }) {
+export default function StackedBarChart({ results, baselineDays, totalDailyFuel }) {
   if (!results) return null;
 
   // Build data for each active measure
@@ -34,14 +35,14 @@ export default function StackedBarChart({ results, baselineDays, totalDailyPetro
     .map((m) => {
       const r = results.perMeasure[m.id];
       // Calculate this measure's contribution to reserve extension
-      const petrolSaved = r.dailyFuelSaved; // simplified — mostly petrol
-      const reductionShare = petrolSaved / totalDailyPetrol;
+      const fuelSaved = r.dailyFuelSaved;
+      const reductionShare = fuelSaved / totalDailyFuel;
       const daysContribution =
-        baselineDays * (reductionShare / (1 - results.petrolDemandReduction));
+        baselineDays * (reductionShare / (1 - results.combinedDemandReduction));
 
       return {
         name: m.name,
-        days: Math.max(daysContribution * results.interactionDiscount, 0),
+        days: Math.max(daysContribution, 0),
         colour: MEASURE_COLOURS[m.id],
       };
     })

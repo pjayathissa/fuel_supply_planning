@@ -28,7 +28,7 @@ export function calcWorkFromHome(params, sliderValue) {
 
   // Gross weekly fuel saved across all office car commuters
   const grossWeeklyFuelSaved =
-    params.officeCarCommuters * params.avgCommuteFuel * tripReductionFraction * 5;
+    params.officeCarCommuters * params.avgCommuteFuel * tripReductionFraction * params.baselineOfficeDays;
 
   const reboundFactor = 0.85; // 15% rebound
   const netDailyFuelSaved = (grossWeeklyFuelSaved * reboundFactor) / 7;
@@ -113,7 +113,18 @@ export function calcCycling(params, sliderValue, wfhDays = 0) {
  * 4. Speed Limit Reduction
  * Cumulative fuel savings are looked up directly from the speedLimitFuelSavings
  * table, which accounts for approximate NZ road lengths at each posted speed.
+ * Time cost is computed per speed band with road-length weighting.
  */
+
+// Approximate share of total VKT at each posted speed band
+const SPEED_BAND_VKT_SHARE = {
+  110: 0.01,  // very few roads at 110 km/h
+  100: 0.41,  // largest share — state highways
+  90: 0.18,
+  80: 0.22,
+  70: 0.10,
+};
+
 export function calcSpeedLimit(params, sliderValue) {
   const fuelSavingFraction = params.speedLimitFuelSavings[sliderValue] || 0;
 
@@ -121,13 +132,23 @@ export function calcSpeedLimit(params, sliderValue) {
     params.dailyPetrolConsumption * 1e6 + params.dailyDieselConsumption * 1e6;
   const dailyFuelSaved = totalDailyFuel * fuelSavingFraction;
 
-  // Travel time cost (approximate — assume average affected speed is 90 km/h)
-  const totalAnnualVKT = 45e9;
-  const affectedVKTShare = fuelSavingFraction / 0.096; // proportion of affected roads
-  const avgOriginalSpeed = 90;
-  const timeIncrease = avgOriginalSpeed / sliderValue - 1;
-  const extraHoursPerYear =
-    ((totalAnnualVKT * affectedVKTShare) / avgOriginalSpeed) * timeIncrease;
+  // Per-band time cost: iterate each speed zone and compute extra travel time
+  // for bands above the new limit (lower bands are unaffected)
+  const totalAnnualVKT = params.annualVKT;
+  let extraHoursPerYear = 0;
+  for (const [speedStr, vktShare] of Object.entries(SPEED_BAND_VKT_SHARE)) {
+    // Convert the object key (e.g. "100") from string to integer for arithmetic
+    const originalSpeed = parseInt(speedStr, 10);
+    // Skip bands at or below the new limit — these roads are unaffected
+    if (originalSpeed <= sliderValue) continue;
+    // Total km driven per year on roads in this speed band
+    const bandVKT = totalAnnualVKT * vktShare;
+    // Fractional increase in travel time: e.g. 100→80 = 100/80 - 1 = 0.25 (25% longer)
+    const timeIncrease = originalSpeed / sliderValue - 1;
+    // Extra hours = (km at original speed → hours) × fractional time increase
+    extraHoursPerYear += (bandVKT / originalSpeed) * timeIncrease;
+  }
+
   const personalTimeCost = extraHoursPerYear * 0.70 * params.personalTimeCostPerHour;
   const commercialTimeCost = extraHoursPerYear * 0.30 * params.commercialTimeCostPerHour;
   const fuelCostSaving = dailyFuelSaved * 365 * params.fuelPricePerLitre;
@@ -151,8 +172,8 @@ export function calcCarpooling(params, sliderValue) {
   const dailyCommuterFuel = params.officeCarCommuters * params.avgCommuteFuel;
   const dailyFuelSaved = dailyCommuterFuel * vehicleReduction;
 
-  // Net benefit from shared fuel costs (30% of fuel savings)
-  const annualEconomicCost = -(dailyFuelSaved * 365 * params.fuelPricePerLitre * 0.3);
+  // Net benefit from shared fuel costs (30% of fuel savings, ~230 working days)
+  const annualEconomicCost = -(dailyFuelSaved * 230 * params.fuelPricePerLitre * 0.3);
 
   return {
     dailyFuelSaved,
@@ -266,6 +287,54 @@ export function calcFuelPurchaseCaps(params) {
   };
 }
 
+/**
+ * 11. EV Fleet Share
+ * Adjusts baseline petrol demand downward based on the share of the light
+ * vehicle fleet that is electric. This is a structural measure, not a crisis
+ * response. The slider sets a target EV share; the saving is the difference
+ * between current and target share applied to total petrol consumption.
+ *
+ * Economic cost per additional EV (annualised):
+ *   Costs:  upfront price premium ~$12k amortised over 10yr = $1,200/yr
+ *           grid infrastructure (distribution upgrades)     = $500/yr
+ *   Benefits: running cost savings (fuel + maintenance)     = $2,000/yr
+ *             avoided fuel imports (trade balance benefit)   = $1,500/yr
+ *   Net: ~$1,800/yr benefit per additional EV
+ *
+ * Sources: Rewiring Aotearoa, EECA, Concept Consulting/Retyna V2G study,
+ *          Canstar NZ, Drive Electric, Transpower grid investment estimates.
+ */
+const EV_UPFRONT_PREMIUM_PER_YEAR = 1200;   // $12k premium amortised over 10 years
+const EV_GRID_COST_PER_YEAR = 500;          // distribution/infrastructure per EV
+const EV_RUNNING_SAVINGS_PER_YEAR = 2000;   // fuel + maintenance savings vs ICE
+const EV_IMPORT_DISPLACEMENT_PER_YEAR = 1500; // avoided petrol import (trade balance)
+
+export function calcEvFleetShare(params, sliderValue) {
+  const targetEvShare = sliderValue / 100;
+  const currentEvShare = params.evFleetShare;
+  const additionalEvShare = Math.max(0, targetEvShare - currentEvShare);
+
+  // Additional EVs displace petrol demand proportionally
+  const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
+  const dailyFuelSaved = totalDailyPetrol * additionalEvShare;
+
+  // Number of additional EVs beyond current fleet
+  const additionalEVs = additionalEvShare * params.lightVehicleFleet;
+
+  // Net annual economic impact per EV: costs minus benefits (negative = net benefit)
+  const netCostPerEV =
+    (EV_UPFRONT_PREMIUM_PER_YEAR + EV_GRID_COST_PER_YEAR)
+    - (EV_RUNNING_SAVINGS_PER_YEAR + EV_IMPORT_DISPLACEMENT_PER_YEAR);
+  const annualEconomicCost = additionalEVs * netCostPerEV;
+
+  return {
+    dailyFuelSaved,
+    annualEconomicCost,
+    fuelType: 'petrol',
+    isLongTerm: true,
+  };
+}
+
 // ─── Calculation dispatcher ─────────────────────────────────────────────────
 
 const CALC_MAP = {
@@ -278,6 +347,7 @@ const CALC_MAP = {
   oddEvenPlates: calcOddEvenPlates,
   ecoDriving: calcEcoDriving,
   freightConsolidation: calcFreightConsolidation,
+  evFleetShare: calcEvFleetShare,
   fuelPurchaseCaps: calcFuelPurchaseCaps,
 };
 
@@ -300,6 +370,15 @@ export function calculateAll(params, measureStates) {
   const effectiveWfhDays =
     wfhState && wfhState.enabled ? wfhState.value : 5 - params.baselineOfficeDays;
 
+  // Determine effective EV share for commuter-based measures
+  const evState = measureStates.evFleetShare;
+  const effectiveEvShare =
+    evState && evState.enabled ? evState.value / 100 : params.evFleetShare;
+
+  // Build adjusted params with effective EV share applied to commuter measures
+  // ICE fraction determines how many car commuters are actually burning petrol
+  const iceFraction = 1 - effectiveEvShare;
+
   // Calculate each active measure
   for (const [id, state] of Object.entries(measureStates)) {
     if (!state.enabled) {
@@ -310,11 +389,26 @@ export function calculateAll(params, measureStates) {
     const calcFn = CALC_MAP[id];
     if (!calcFn) continue;
 
+    let result;
     // Pass WFH days to commute-based mode shift measures
+    const isCommuterMeasure = ['publicTransport', 'cycling', 'wfh', 'carpooling'].includes(id);
     const needsWfhContext = id === 'publicTransport' || id === 'cycling';
-    const result = needsWfhContext
-      ? calcFn(params, state.value, effectiveWfhDays)
-      : calcFn(params, state.value);
+
+    if (needsWfhContext) {
+      result = calcFn(params, state.value, effectiveWfhDays);
+    } else {
+      result = calcFn(params, state.value);
+    }
+
+    // Apply ICE fraction discount to commuter-based measures
+    // (EV commuters have no petrol to save)
+    if (isCommuterMeasure && id !== 'evFleetShare') {
+      result = {
+        ...result,
+        dailyFuelSaved: result.dailyFuelSaved * iceFraction,
+      };
+    }
+
     results[id] = { ...result, active: true };
     activeMeasureCount++;
 
@@ -335,30 +429,28 @@ export function calculateAll(params, measureStates) {
     totalAnnualCost += result.annualEconomicCost;
   }
 
-  // ─── Interaction discount ──────────────────────────────────────────────
-  // When multiple measures are active, there are overlaps
-  // (e.g., WFH workers don't carpool on WFH days)
-  let interactionDiscount = 1.0;
-  if (activeMeasureCount >= 5) {
-    interactionDiscount = 0.85; // 15% discount
-  } else if (activeMeasureCount >= 3) {
-    interactionDiscount = 0.90; // 10% discount
-  }
+  // No interaction discount — relevant interactions (WFH↔PT, WFH↔cycling,
+  // EV share↔commuter measures) are already captured in the functions above.
 
-  const combinedPetrolSaved = totalPetrolSaved * interactionDiscount;
-  const combinedDieselSaved = totalDieselSaved * interactionDiscount;
-  const combinedDailyFuelSaved =
-    (totalPetrolSaved + totalDieselSaved) * interactionDiscount;
+  const combinedPetrolSaved = totalPetrolSaved;
+  const combinedDieselSaved = totalDieselSaved;
+  const combinedDailyFuelSaved = totalPetrolSaved + totalDieselSaved;
 
   // ─── Derived metrics ──────────────────────────────────────────────────
   const totalDailyPetrol = params.dailyPetrolConsumption * 1e6;
+  const totalDailyDiesel = params.dailyDieselConsumption * 1e6;
+  const totalDailyFuel = totalDailyPetrol + totalDailyDiesel;
   const petrolDemandReduction = combinedPetrolSaved / totalDailyPetrol;
+  const dieselDemandReduction = combinedDieselSaved / totalDailyDiesel;
 
-  // Reserve extension: days = baseline / (1 - reduction)
+  // Combined (blended) reserve extension using weighted demand reduction
+  const combinedDemandReduction = combinedDailyFuelSaved / totalDailyFuel;
+
+  // Reserve extension: days = baseline / (1 - combined reduction)
   const extendedReserveDays =
-    petrolDemandReduction >= 1
+    combinedDemandReduction >= 1
       ? Infinity
-      : params.onshoreReserveDays / (1 - petrolDemandReduction);
+      : params.onshoreReserveDays / (1 - combinedDemandReduction);
   const extraDays = extendedReserveDays - params.onshoreReserveDays;
 
   // Cost per extra day of reserve gained
@@ -370,11 +462,12 @@ export function calculateAll(params, measureStates) {
     combinedDieselSaved,
     combinedDailyFuelSaved,
     petrolDemandReduction,
+    dieselDemandReduction,
+    combinedDemandReduction,
     extendedReserveDays,
     extraDays,
     totalAnnualCost,
     costPerExtraDay,
     activeMeasureCount,
-    interactionDiscount,
   };
 }

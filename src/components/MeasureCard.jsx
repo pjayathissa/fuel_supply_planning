@@ -9,7 +9,7 @@ import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS } from '../const
  * and an expandable section showing relevant baseline parameters and assumptions.
  */
 export default function MeasureCard({ measure, state, onChange, result, params, onParamsChange }) {
-  const { id, name, description, note, hasSlider, sliderConfig, isEmergency, isDemandSmoothing } =
+  const { id, name, description, note, hasSlider, sliderConfig, isEmergency, isDemandSmoothing, isLongTerm } =
     measure;
   const { enabled, value } = state;
   const [showParams, setShowParams] = useState(false);
@@ -67,6 +67,9 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
         <div className="measure-card-title-row">
           {isEmergency && (
             <AlertTriangle size={18} className="measure-emergency-icon" />
+          )}
+          {isLongTerm && (
+            <span className="measure-long-term-badge">Long-term</span>
           )}
           <h3 className="measure-card-title">{name}</h3>
         </div>
