@@ -3,6 +3,7 @@ import { BookOpen, BarChart3 } from 'lucide-react';
 import { BASELINE_DEFAULTS, MEASURES } from './constants/defaults';
 import { calculateAll } from './utils/calculations';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import BaselinePanel from './components/BaselinePanel';
 import MeasureList from './components/MeasureList';
 import ResultsDashboard from './components/ResultsDashboard';
@@ -121,6 +122,8 @@ export default function App() {
         isOpen={methodologyOpen}
         onClose={() => setMethodologyOpen(false)}
       />
+
+      <Footer />
     </div>
   );
 }
