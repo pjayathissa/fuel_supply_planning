@@ -168,8 +168,8 @@ export default function WFHAssumptionsModal({ isOpen, onClose }) {
             <p>
               New Zealand — component estimates with cubic trendline. This model
               breaks down the GDP impact of work-from-home across eight
-              independent economic channels, then fits a cubic polynomial as a
-              summary approximation.
+              independent economic channels, then fits a simplified curve-fit
+              approximation (cubic polynomial) as a summary.
             </p>
           </section>
 
@@ -317,15 +317,16 @@ export default function WFHAssumptionsModal({ isOpen, onClose }) {
 
           {/* Formula */}
           <section className="methodology-section wfh-formula-section">
-            <h3>Cubic Approximation</h3>
+            <h3>Simplified Curve-Fit Approximation</h3>
             <p className="wfh-formula-text">
               GDP Impact ($m) &asymp; 300 + 1,465<em>d</em> &minus; 830
               <em>d</em>&sup2; + 65<em>d</em>&sup3;
             </p>
             <p className="wfh-formula-note">
-              This cubic is a trendline fitted to the component estimates. It
-              captures the overall shape but does not match every data point
-              exactly — the component estimates are the primary analysis.
+              This is a simplified curve-fit approximation (cubic polynomial)
+              fitted to the component estimates. It captures the overall shape
+              but does not match every data point exactly — the component
+              estimates are the primary analysis.
             </p>
           </section>
 

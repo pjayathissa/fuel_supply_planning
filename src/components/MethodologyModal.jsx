@@ -44,6 +44,10 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
               extension (days), combined demand reduction (blended petrol +
               diesel, weighted by consumption), and cost-effectiveness.
             </p>
+            <p>
+              All economic figures are order-of-magnitude estimates and should
+              not be treated as precise forecasts.
+            </p>
           </section>
 
           {/* Data Sources */}
@@ -76,7 +80,8 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
               cubic polynomial that accounts for productivity effects, CBD
               retail/hospitality loss, congestion relief, innovation impacts,
               household savings, and employer savings — yielding a net benefit
-              at low WFH levels that diminishes as days increase.
+              at low WFH levels that diminishes as days increase. The cubic
+              polynomial used is a simplified curve-fit approximation.
             </p>
             {onOpenWfhAssumptions && (
               <button className="wfh-detail-link" onClick={onOpenWfhAssumptions}>
@@ -185,7 +190,8 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
               and benefits (running cost savings ~$2,000/yr from cheaper fuel and
               lower maintenance, plus ~$1,500/yr in avoided fuel imports improving
               NZ's trade balance). Net result is ~$1,800/yr benefit per additional
-              EV. Sources: Rewiring Aotearoa, EECA, Canstar NZ, Concept
+              EV. Fleet-level economics do not reflect household affordability
+              barriers. Sources: Rewiring Aotearoa, EECA, Canstar NZ, Concept
               Consulting/Retyna V2G study, Transpower grid investment estimates.
             </p>
 
@@ -252,6 +258,23 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
                 rerouted shipments, strategic reserve drawdowns, or diplomatic
                 measures to reopen shipping lanes). This is a demand-side
                 analysis tool only.
+              </li>
+              <li>
+                <strong>Social and equity costs</strong> — The tool does not
+                account for impacts on shift workers, single parents, disabled
+                people, small businesses dependent on customer travel, or the
+                mental health effects of restricted mobility.
+              </li>
+              <li>
+                The precision of displayed numbers (e.g., decimal places)
+                reflects calculation mechanics, not confidence in the underlying
+                assumptions.
+              </li>
+              <li>
+                <strong>Crisis dynamics</strong> — Real supply disruptions
+                involve panic buying, regional distribution failures, hoarding,
+                and cascading effects on food, healthcare, and emergency
+                services. These are not covered in this analysis.
               </li>
             </ul>
           </section>

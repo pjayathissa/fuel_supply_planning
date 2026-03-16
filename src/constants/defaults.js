@@ -247,7 +247,7 @@ export const MEASURE_PARAMS = {
 export const MEASURE_ASSUMPTIONS = {
   wfh: [
     '15% rebound factor — WFH workers still make some non-commute trips on WFH days',
-    'Economic cost modelled as non-linear (cubic polynomial) based on productivity research',
+    'Economic cost modelled as non-linear (a simplified curve-fit approximation) based on productivity research',
     'Economic cost impact based on: productivity, CBD retail/hospitality loss, congestion, innovation, household savings, employer savings',
   ],
   publicTransport: [
@@ -281,6 +281,7 @@ export const MEASURE_ASSUMPTIONS = {
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
     'International evidence suggests 10-25% reduction in practice (default 22%)',
+    'Significant social disruption likely — impacts shift workers, caregivers, disabled people, and small businesses.',
   ],
   ecoDriving: [
     '50% effectiveness factor — not everyone adopts, and urban driving is ~50% of total',
@@ -297,6 +298,7 @@ export const MEASURE_ASSUMPTIONS = {
     'Economic cost: upfront premium ~$1,200/yr + grid costs ~$500/yr per additional EV',
     'Economic benefit: running savings ~$2,000/yr + avoided fuel imports ~$1,500/yr per EV',
     'Sources: Rewiring Aotearoa, EECA, Canstar NZ, Transpower grid estimates',
+    'Fleet-level economics do not reflect household affordability barriers.',
   ],
   fuelPurchaseCaps: [
     'No direct fuel saving — demand smoothing only',
@@ -484,7 +486,7 @@ export const MEASURES = [
     sliderConfig: {
       label: 'EV share of light fleet',
       min: 5,
-      max: 50,
+      max: 25,
       step: 1,
       default: 6,
       unit: '%',

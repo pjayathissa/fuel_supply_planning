@@ -10,7 +10,7 @@ export default function Header() {
         <div className="header-content">
           <h1 className="header-title">NZ Fuel Reserves Impact Calculator</h1>
           <p className="header-subtitle">
-            Modelling demand-restraint measures for fuel supply disruptions
+            Exploring demand-restraint measures for fuel supply disruptions
           </p>
         </div>
       </div>
