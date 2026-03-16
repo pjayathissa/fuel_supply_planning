@@ -1,14 +1,11 @@
-import archLogo from '/opportunity-arch.svg';
+import archLogo from '/opportunity-logo-white.svg';
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-inner">
         <div className="header-logo">
-          <div className="header-logo-mark">
-            <img src={archLogo} alt="" className="header-arch" />
-            <span className="header-logo-text">OPPORTUNITY</span>
-          </div>
+          <img src={archLogo} alt="Opportunity Party" className="header-arch" />
         </div>
         <div className="header-content">
           <h1 className="header-title">NZ Fuel Reserves Impact Calculator</h1>
