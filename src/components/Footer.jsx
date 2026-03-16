@@ -12,9 +12,9 @@ export default function Footer() {
             The initiatives represented here do not represent any policy from the Opportunity Party
             nor do we explicitly recommend/oppose any of the initiatives. We are actively
             requesting feedback to adjust the algorithm, baseline inputs, and are interested
-            in hearing about alternative initiatives that could have an impact. Please{' '}
-            <a href="https://www.opportunity.org.nz/contact" target="_blank" rel="noopener noreferrer">
-              get in touch here
+            in hearing about alternative initiatives that could have an impact. Please write to{' '}
+            <a href="mailto:policy@opportunity.org.nz?subject=Feedback%20on%20Fuel%20Reserves%20Tool">
+              policy@opportunity.org.nz
             </a>.
           </p>
         </div>
