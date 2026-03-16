@@ -10,7 +10,7 @@ export default function SliderInput({
   onChange,
   debounceMs = 150,
 }) {
-  const { label, min, max, step, unit, isDiscrete, discreteLabels } = config;
+  const { label, min, max, step, unit, isDiscrete, discreteLabels, reversed } = config;
   const [localValue, setLocalValue] = useState(value);
   const timeoutRef = useRef(null);
 
@@ -46,7 +46,26 @@ export default function SliderInput({
     : `${localValue % 1 === 0 ? localValue : localValue.toFixed(step < 1 ? 2 : 1)}${unit ? ` ${unit}` : ''}`;
 
   // Calculate fill percentage for styling the range track
-  const fillPercent = ((localValue - min) / (max - min)) * 100;
+  // For reversed sliders, the fill grows from the right (high values on left, low on right)
+  const rawFillPercent = ((localValue - min) / (max - min)) * 100;
+  const fillPercent = reversed ? 100 - rawFillPercent : rawFillPercent;
+
+  // For reversed sliders, we invert the internal range value
+  const internalValue = reversed ? (min + max - localValue) : localValue;
+
+  const handleInternalChange = useCallback(
+    (e) => {
+      let newValue = parseFloat(e.target.value);
+      if (reversed) newValue = min + max - newValue;
+      setLocalValue(newValue);
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        onChange(newValue);
+      }, debounceMs);
+    },
+    [onChange, debounceMs, reversed, min, max]
+  );
 
   return (
     <div className="slider-input">
@@ -59,11 +78,13 @@ export default function SliderInput({
         min={min}
         max={max}
         step={step}
-        value={localValue}
-        onChange={handleChange}
+        value={internalValue}
+        onChange={reversed ? handleInternalChange : handleChange}
         className="slider-range"
         style={{
-          background: `linear-gradient(to right, #0D9488 0%, #0D9488 ${fillPercent}%, #e2e8f0 ${fillPercent}%, #e2e8f0 100%)`,
+          background: reversed
+            ? `linear-gradient(to right, #e2e8f0 0%, #e2e8f0 ${100 - fillPercent}%, #0D9488 ${100 - fillPercent}%, #0D9488 100%)`
+            : `linear-gradient(to right, #0D9488 0%, #0D9488 ${fillPercent}%, #e2e8f0 ${fillPercent}%, #e2e8f0 100%)`,
         }}
       />
       {isDiscrete && (

@@ -662,6 +662,36 @@ h1, h2, h3, h4 {
   margin-bottom: 2px;
 }
 
+.measure-references {
+  margin-top: var(--space-sm);
+}
+
+.measure-references-list {
+  padding-left: var(--space-md);
+  margin: 0;
+  list-style: none;
+}
+
+.measure-references-list li {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.measure-reference-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.measure-reference-link:hover {
+  color: var(--teal-light);
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .measure-params-grid {
     grid-template-columns: 1fr;

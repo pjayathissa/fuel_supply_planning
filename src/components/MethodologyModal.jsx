@@ -87,22 +87,25 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
 
             <h4>2. Public Transport Mode Shift</h4>
             <p>
-              A percentage increase in PT use shifts commuters from private car to
-              existing services. The fuel saving equals shifted commuters times
-              average daily commute fuel. Economic cost reflects the extra commute
-              time (~20 minutes per day, of which 60% is productive — the
-              remaining 40% is valued as unproductive time at $30/hour), offset
-              by congestion reduction benefits (~$15/day per car removed). When
-              WFH is active, the mode shift only applies on days people commute.
+              The slider sets a target absolute PT mode share (baseline: 6.5%).
+              Shifted commuters = total commuters × (target share − baseline share).
+              The fuel saving equals shifted commuters times average daily commute
+              fuel. Economic cost reflects the extra commute time (~20 minutes per
+              day, of which 60% is productive — the remaining 40% is valued as
+              unproductive time at $30/hour), offset by congestion reduction
+              benefits (~$15/day per car removed). When WFH is active, the mode
+              shift only applies on days people commute.
             </p>
 
             <h4>3. Cycling & Walking Mode Shift</h4>
             <p>
-              Similar to PT, but active commuters tend to have shorter trips (85%
-              of average fuel use). The economic impact is a net benefit:
-              health gains (1.5 fewer sick days at $350/day), household fuel
-              savings, and congestion reduction ($15/day per car removed). When
-              WFH is active, the mode shift only applies on days people commute.
+              The slider sets a target absolute active mode share (baseline: 7.5%).
+              Shifted commuters = total commuters × (target share − baseline share).
+              Active commuters tend to have shorter trips (85% of average fuel
+              use). The economic impact is a net benefit: health gains (1.5 fewer
+              sick days at $350/day), household fuel savings, and congestion
+              reduction ($15/day per car removed). When WFH is active, the mode
+              shift only applies on days people commute.
             </p>
 
             <h4>4. Speed Limit Reduction</h4>

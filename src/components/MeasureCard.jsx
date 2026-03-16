@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AlertTriangle, ChevronDown, ChevronUp, RotateCcw, Info, ExternalLink } from 'lucide-react';
 import SliderInput from './SliderInput';
-import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS } from '../constants/defaults';
+import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS, MEASURE_REFERENCES } from '../constants/defaults';
 
 /**
  * Interactive card for a single demand-restraint measure.
@@ -57,7 +57,8 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
 
   const paramKeys = MEASURE_PARAMS[id] || [];
   const assumptions = MEASURE_ASSUMPTIONS[id] || [];
-  const hasExpandableContent = paramKeys.length > 0 || assumptions.length > 0;
+  const references = MEASURE_REFERENCES[id] || [];
+  const hasExpandableContent = paramKeys.length > 0 || assumptions.length > 0 || references.length > 0;
 
   return (
     <div
@@ -184,6 +185,23 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
                           View detailed WFH GDP impact model
                         </button>
                       )}
+                    </div>
+                  )}
+
+                  {/* References / sources */}
+                  {references.length > 0 && (
+                    <div className="measure-references">
+                      <h4 className="measure-assumptions-title">References</h4>
+                      <ul className="measure-references-list">
+                        {references.map((ref, i) => (
+                          <li key={i}>
+                            <a href={ref.url} target="_blank" rel="noopener noreferrer" className="measure-reference-link">
+                              <ExternalLink size={11} />
+                              {ref.text}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>

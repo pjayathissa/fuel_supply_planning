@@ -47,16 +47,17 @@ export function calcWorkFromHome(params, sliderValue) {
 
 /**
  * 2. Public Transport Mode Shift
- * Relative increase in PT mode share shifts commuters from car to PT.
+ * Slider value is the target absolute PT mode share (%).
+ * Shifted commuters = total commuters × (target share − baseline share).
  * Economic cost = extra commute time minus congestion reduction benefit.
  * When WFH is active, mode shift only applies on days people commute.
  */
 export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
-  const ptIncreasePercent = sliderValue;
+  const targetPtShare = sliderValue / 100;
   const totalCommuters = getTotalCommuters(params);
   const commutingFraction = (5 - wfhDays) / 5;
 
-  const shiftedCommuters = totalCommuters * params.ptModeShare * (ptIncreasePercent / 100);
+  const shiftedCommuters = totalCommuters * Math.max(0, targetPtShare - params.ptModeShare);
   const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * commutingFraction;
 
   // PT adds ~20 min/day; productive fraction is configurable → remainder is unproductive
@@ -78,17 +79,19 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
 
 /**
  * 3. Cycling & Walking Mode Shift
- * Similar to PT but with health/productivity benefits → net economic benefit.
+ * Slider value is the target absolute active mode share (%).
+ * Shifted commuters = total commuters × (target share − baseline share).
+ * Health/productivity benefits → net economic benefit.
  * Slight discount (0.85×) because active commuters tend to have shorter trips.
  * When WFH is active, mode shift only applies on days people commute.
  */
 export function calcCycling(params, sliderValue, wfhDays = 0) {
-  const activeIncreasePercent = sliderValue;
+  const targetActiveShare = sliderValue / 100;
   const totalCommuters = getTotalCommuters(params);
   const commutingFraction = (5 - wfhDays) / 5;
 
   const shiftedCommuters =
-    totalCommuters * params.activeModeShare * (activeIncreasePercent / 100);
+    totalCommuters * Math.max(0, targetActiveShare - params.activeModeShare);
   const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * 0.85 * commutingFraction;
 
   // Health benefit: 1.5 fewer sick days at $350/day value
