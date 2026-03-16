@@ -1,13 +1,16 @@
-import { Fuel } from 'lucide-react';
+import archLogo from '/opportunity-arch.svg';
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-inner">
-        <div className="header-icon">
-          <Fuel size={32} />
+        <div className="header-logo">
+          <div className="header-logo-mark">
+            <img src={archLogo} alt="" className="header-arch" />
+            <span className="header-logo-text">OPPORTUNITY</span>
+          </div>
         </div>
-        <div>
+        <div className="header-content">
           <h1 className="header-title">NZ Fuel Reserve Impact Calculator</h1>
           <p className="header-subtitle">
             Modelling demand-restraint measures for fuel supply disruptions

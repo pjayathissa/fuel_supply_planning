@@ -248,7 +248,7 @@ export const MEASURE_ASSUMPTIONS = {
   wfh: [
     '15% rebound factor — WFH workers still make some non-commute trips on WFH days',
     'Economic cost modelled as non-linear (cubic polynomial) based on productivity research',
-    'Economic cost impact based on: productivity, CBD retail/hospitatiliy loss, congestion, innovation, household savings, employer savings',
+    'Economic cost impact based on: productivity, CBD retail/hospitality loss, congestion, innovation, household savings, employer savings',
   ],
   publicTransport: [
     'PT adds ~20 min/day to commute; productive fraction is adjustable → remainder is unproductive time cost',
