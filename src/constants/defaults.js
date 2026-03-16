@@ -248,14 +248,16 @@ export const MEASURE_ASSUMPTIONS = {
   wfh: [
     '15% rebound factor — WFH workers still make some non-commute trips on WFH days',
     'Economic cost modelled as non-linear (cubic polynomial) based on productivity research',
-    'Economic cost impact based on: productivity, CBD retail/hospitatiliy loss, congestion, innovation, household savings, employer savings',
+    'Economic cost impact based on: productivity, CBD retail/hospitality loss, congestion, innovation, household savings, employer savings',
   ],
   publicTransport: [
+    'Slider shows target absolute PT mode share — shifted commuters = total commuters × (target share − baseline share)',
     'PT adds ~20 min/day to commute; productive fraction is adjustable → remainder is unproductive time cost',
     '230 working days/year (adjusted down if WFH is active)',
     'Congestion benefit applied per car removed from the road',
   ],
   cycling: [
+    'Slider shows target absolute active mode share — shifted commuters = total commuters × (target share − baseline share)',
     '0.85× discount — active commuters tend to have shorter trips',
     'Health benefit: 1.5 fewer sick days at $350/day per shifted commuter',
     'Household fuel savings counted as economic benefit',
@@ -302,7 +304,81 @@ export const MEASURE_ASSUMPTIONS = {
   ],
 };
 
+/**
+ * References / sources for each measure, displayed as links in the measure card.
+ */
+export const MEASURE_REFERENCES = {
+  wfh: [
+    { text: 'IEA 10-Point Plan — Point 2: Work from home up to 3 days a week', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+  ],
+  publicTransport: [
+    { text: 'IEA 10-Point Plan — Point 4: Public transport, cycling & walking', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+    { text: 'EHINZ 2023 Census commuter mode share data', url: 'https://ehinz.ac.nz/indicators/transport/means-of-travel-to-work/' },
+  ],
+  cycling: [
+    { text: 'IEA 10-Point Plan — Point 4: Public transport, cycling & walking', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+    { text: 'EHINZ 2023 Census commuter mode share data', url: 'https://ehinz.ac.nz/indicators/transport/means-of-travel-to-work/' },
+  ],
+  speedLimit: [
+    { text: 'IEA 10-Point Plan — Point 1: Reduce speed limits on highways', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+    { text: 'MoT vehicle kilometres travelled (VKT) data', url: 'https://www.transport.govt.nz/statistics-and-insights/road-transport/sheet/vehicle-kms-travelled' },
+  ],
+  carpooling: [
+    { text: 'IEA 10-Point Plan — Point 6: Car sharing and fuel-saving practices', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+  ],
+  carFreeSundays: [
+    { text: 'IEA 10-Point Plan — Point 3: Car-free Sundays in cities', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+  ],
+  oddEvenPlates: [
+    { text: 'IEA 10-Point Plan — Point 5: Alternate private car access in large cities', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+  ],
+  ecoDriving: [
+    { text: 'IEA 10-Point Plan — Point 6: Adopt practices to reduce fuel use', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+    { text: 'EECA fuel-efficient driving tips', url: 'https://www.eeca.govt.nz/co-funding/transport-emission-reduction/fuel-efficient-driving/' },
+  ],
+  freightConsolidation: [
+    { text: 'IEA 10-Point Plan — Point 7: Efficient driving for freight trucks', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+  ],
+  evFleetShare: [
+    { text: 'IEA 10-Point Plan — Point 10: Reinforce adoption of EVs', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
+    { text: 'Rewiring Aotearoa — transport electrification', url: 'https://www.rewiringaotearoa.nz/' },
+  ],
+  fuelPurchaseCaps: [],
+};
+
 export const MEASURES = [
+  {
+    id: 'publicTransport',
+    name: 'Public Transport Mode Shift',
+    description: 'Commuters shift from private car to existing public transport services. Current PT mode share is 6.5%.',
+    hasSlider: true,
+    sliderConfig: {
+      label: 'Target PT mode share',
+      min: 6.5,
+      max: 20,
+      step: 0.5,
+      default: 7.5,
+      unit: '%',
+      isPercentage: true,
+      isAbsoluteModeShare: true,
+    },
+  },
+  {
+    id: 'cycling',
+    name: 'Cycling & Walking Mode Shift',
+    description: 'Commuters shift from private car to cycling, e-bikes, or walking. Current active mode share is 7.5%.',
+    hasSlider: true,
+    sliderConfig: {
+      label: 'Target active mode share',
+      min: 7.5,
+      max: 20,
+      step: 0.5,
+      default: 8.5,
+      unit: '%',
+      isPercentage: true,
+      isAbsoluteModeShare: true,
+    },
+  },
   {
     id: 'wfh',
     name: 'Work From Home',
@@ -318,36 +394,6 @@ export const MEASURES = [
     },
   },
   {
-    id: 'publicTransport',
-    name: 'Public Transport Mode Shift',
-    description: 'Commuters shift from private car to existing public transport services.',
-    hasSlider: true,
-    sliderConfig: {
-      label: 'Increase in PT use',
-      min: 5,
-      max: 100,
-      step: 5,
-      default: 10,
-      unit: '%',
-      isPercentage: true,
-    },
-  },
-  {
-    id: 'cycling',
-    name: 'Cycling & Walking Mode Shift',
-    description: 'Commuters shift from private car to cycling, e-bikes, or walking.',
-    hasSlider: true,
-    sliderConfig: {
-      label: 'Increase in active transport',
-      min: 5,
-      max: 50,
-      step: 5,
-      default: 10,
-      unit: '%',
-      isPercentage: true,
-    },
-  },
-  {
     id: 'speedLimit',
     name: 'Speed Limit Reduction',
     description: 'Lower speed limits reduce fuel consumption. Savings are weighted by road lengths at each posted speed.',
@@ -360,6 +406,7 @@ export const MEASURES = [
       step: 10,
       default: 80,
       unit: 'km/h',
+      reversed: true,
     },
   },
   {

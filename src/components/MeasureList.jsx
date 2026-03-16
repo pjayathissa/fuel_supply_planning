@@ -11,6 +11,7 @@ export default function MeasureList({
   results,
   params,
   onParamsChange,
+  onOpenWfhAssumptions,
 }) {
   return (
     <div className="measure-list">
@@ -30,6 +31,7 @@ export default function MeasureList({
             result={results?.perMeasure?.[measure.id]}
             params={params}
             onParamsChange={onParamsChange}
+            onOpenWfhAssumptions={measure.id === 'wfh' ? onOpenWfhAssumptions : undefined}
           />
         ))}
       </div>

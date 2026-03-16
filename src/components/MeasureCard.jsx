@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { AlertTriangle, ChevronDown, ChevronUp, RotateCcw, Info } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp, RotateCcw, Info, ExternalLink } from 'lucide-react';
 import SliderInput from './SliderInput';
-import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS } from '../constants/defaults';
+import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS, MEASURE_REFERENCES } from '../constants/defaults';
 
 /**
  * Interactive card for a single demand-restraint measure.
  * Supports toggle on/off, slider adjustment, emergency styling,
  * and an expandable section showing relevant baseline parameters and assumptions.
  */
-export default function MeasureCard({ measure, state, onChange, result, params, onParamsChange }) {
+export default function MeasureCard({ measure, state, onChange, result, params, onParamsChange, onOpenWfhAssumptions }) {
   const { id, name, description, note, hasSlider, sliderConfig, isEmergency, isDemandSmoothing, isLongTerm } =
     measure;
   const { enabled, value } = state;
@@ -57,7 +57,8 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
 
   const paramKeys = MEASURE_PARAMS[id] || [];
   const assumptions = MEASURE_ASSUMPTIONS[id] || [];
-  const hasExpandableContent = paramKeys.length > 0 || assumptions.length > 0;
+  const references = MEASURE_REFERENCES[id] || [];
+  const hasExpandableContent = paramKeys.length > 0 || assumptions.length > 0 || references.length > 0;
 
   return (
     <div
@@ -173,6 +174,32 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
                       <ul className="measure-assumptions-list">
                         {assumptions.map((a, i) => (
                           <li key={i}>{a}</li>
+                        ))}
+                      </ul>
+                      {onOpenWfhAssumptions && (
+                        <button
+                          className="wfh-detail-link"
+                          onClick={onOpenWfhAssumptions}
+                        >
+                          <ExternalLink size={12} />
+                          View detailed WFH GDP impact model
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* References / sources */}
+                  {references.length > 0 && (
+                    <div className="measure-references">
+                      <h4 className="measure-assumptions-title">References</h4>
+                      <ul className="measure-references-list">
+                        {references.map((ref, i) => (
+                          <li key={i}>
+                            <a href={ref.url} target="_blank" rel="noopener noreferrer" className="measure-reference-link">
+                              <ExternalLink size={11} />
+                              {ref.text}
+                            </a>
+                          </li>
                         ))}
                       </ul>
                     </div>

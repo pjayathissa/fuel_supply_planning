@@ -1,15 +1,15 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    NZ Fuel Reserve Impact Calculator — Styles
-   Professional government/consultancy aesthetic with clean card-based layout
+   Opportunity Party branding with clean card-based layout
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Colour palette */
-  --navy: #1B2A4A;
-  --navy-light: #2A3F6A;
-  --teal: #0D9488;
-  --teal-light: #14B8A6;
-  --teal-bg: #F0FDFA;
+  /* Colour palette — Opportunity Party branding */
+  --navy: #151A61;
+  --navy-light: #1E2573;
+  --teal: #00B4A0;
+  --teal-light: #00DCC8;
+  --teal-bg: #E6FAF7;
   --amber: #D97706;
   --amber-light: #F59E0B;
   --amber-bg: #FFFBEB;
@@ -86,9 +86,9 @@ h1, h2, h3, h4 {
 /* ─── Header ────────────────────────────────────────────────────────────── */
 
 .header {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  background: var(--navy);
   color: white;
-  padding: var(--space-xl) var(--space-xl);
+  padding: var(--space-lg) var(--space-xl);
   margin: var(--space-md) 0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
@@ -96,18 +96,21 @@ h1, h2, h3, h4 {
 
 .header-inner {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-lg);
+  align-items: center;
+  gap: var(--space-xl);
 }
 
-.header-icon {
+.header-logo {
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.15);
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.header-arch {
+  width: 140px;
+  height: auto;
+}
+
+.header-content {
+  flex: 1;
 }
 
 .header-title {
@@ -122,15 +125,7 @@ h1, h2, h3, h4 {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
-  margin-bottom: var(--space-sm);
-}
-
-.header-note {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 400;
-  font-style: italic;
+  margin-bottom: 0;
 }
 
 /* ─── Main layout — two columns on desktop ──────────────────────────────── */
@@ -665,6 +660,36 @@ h1, h2, h3, h4 {
   color: var(--grey-500);
   line-height: 1.5;
   margin-bottom: 2px;
+}
+
+.measure-references {
+  margin-top: var(--space-sm);
+}
+
+.measure-references-list {
+  padding-left: var(--space-md);
+  margin: 0;
+  list-style: none;
+}
+
+.measure-references-list li {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.measure-reference-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.measure-reference-link:hover {
+  color: var(--teal-light);
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {
@@ -1202,9 +1227,28 @@ h1, h2, h3, h4 {
 /* ─── Responsive — mobile ───────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  /* Hide header on mobile */
+  /* Compact header on mobile — show logo inline */
   .header {
+    padding: var(--space-sm) var(--space-md);
+    margin: 0 0 var(--space-sm) 0;
+    border-radius: 0;
+  }
+
+  .header-inner {
+    gap: var(--space-md);
+  }
+
+  .header-arch {
+    width: 80px;
+  }
+
+  .header-content .header-subtitle {
     display: none;
+  }
+
+  .header-title {
+    font-size: 1rem;
+    margin-bottom: 0;
   }
 
   .main-layout {
@@ -1347,6 +1391,337 @@ h1, h2, h3, h4 {
     padding: var(--space-md);
   }
 
+}
+
+/* ─── Footer ───────────────────────────────────────────────────────────── */
+
+.footer {
+  background: var(--navy);
+  color: white;
+  margin-top: var(--space-2xl);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.footer-disclaimer {
+  padding-bottom: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-disclaimer p {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-disclaimer a {
+  color: var(--teal-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-disclaimer a:hover {
+  color: white;
+}
+
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-nav-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.footer-nav-heading {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal-light);
+  margin-bottom: var(--space-xs);
+}
+
+.footer-nav-column a {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-nav-column a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo-small {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.footer-arch {
+  width: 100px;
+  height: auto;
+}
+
+.footer-copyright {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 600px) {
+  .footer-inner {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .footer-nav {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+}
+
+/* ─── WFH Assumptions Modal ────────────────────────────────────────────── */
+
+.wfh-modal-content {
+  max-width: 960px;
+}
+
+/* Chart */
+.wfh-chart-container {
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.wfh-chart-caption {
+  font-size: 0.75rem;
+  color: var(--grey-400);
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+/* Table */
+.wfh-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+}
+
+.wfh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+}
+
+.wfh-th {
+  padding: var(--space-sm) var(--space-sm);
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  background: var(--grey-800);
+  color: white;
+  white-space: nowrap;
+}
+
+.wfh-th-right {
+  text-align: right;
+}
+
+.wfh-th-highlight {
+  background: var(--grey-700);
+}
+
+.wfh-td {
+  padding: 6px var(--space-sm);
+}
+
+.wfh-td-label {
+  font-weight: 600;
+  color: var(--grey-800);
+}
+
+.wfh-td-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.wfh-cell-positive {
+  color: var(--teal);
+}
+
+.wfh-cell-negative {
+  color: var(--red);
+}
+
+.wfh-row-even {
+  background: white;
+}
+
+.wfh-row-odd {
+  background: var(--grey-50);
+}
+
+.wfh-row-highlight {
+  outline: 2px solid rgba(0, 180, 160, 0.4);
+  outline-offset: -2px;
+  font-weight: 600;
+}
+
+.wfh-td-net {
+  font-weight: 700;
+}
+
+.wfh-net-positive {
+  color: var(--teal);
+  background: var(--teal-bg);
+}
+
+.wfh-net-negative {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+/* Formula section */
+.wfh-formula-section {
+  background: var(--teal-bg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 180, 160, 0.2);
+}
+
+.wfh-formula-section h3 {
+  color: var(--navy);
+  border-bottom-color: rgba(0, 180, 160, 0.2);
+}
+
+.wfh-formula-text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 0.95rem !important;
+}
+
+.wfh-formula-note {
+  font-size: 0.82rem !important;
+  color: var(--grey-600) !important;
+}
+
+.wfh-formula-code {
+  margin-top: var(--space-sm);
+  background: rgba(0, 180, 160, 0.1);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.wfh-formula-code code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  color: var(--navy);
+  word-break: break-all;
+}
+
+/* Methodology footnote */
+.wfh-methodology-footnote {
+  color: var(--grey-400) !important;
+  font-style: italic;
+  margin-top: var(--space-lg);
+}
+
+/* Tooltip */
+.wfh-tooltip {
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-md);
+  font-size: 0.78rem;
+  max-width: 260px;
+  font-family: var(--font-sans);
+}
+
+.wfh-tooltip-title {
+  font-weight: 700;
+  color: var(--grey-800);
+  margin-bottom: var(--space-sm);
+}
+
+.wfh-tooltip-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wfh-tooltip-positive {
+  color: var(--teal);
+}
+
+.wfh-tooltip-negative {
+  color: var(--red);
+}
+
+.wfh-tooltip-divider {
+  border: none;
+  border-top: 1px solid var(--grey-200);
+  margin: var(--space-xs) 0;
+}
+
+.wfh-tooltip-net {
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.wfh-tooltip-formula {
+  color: var(--navy);
+  font-style: italic;
+}
+
+/* WFH detail link in measure card */
+.wfh-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color 0.15s;
+  margin-top: var(--space-sm);
+}
+
+.wfh-detail-link:hover {
+  color: var(--navy);
+  text-decoration: underline;
 }
 
 /* ─── Recharts overrides ────────────────────────────────────────────────── */
