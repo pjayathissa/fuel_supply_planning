@@ -10,10 +10,11 @@ export default function Footer() {
             The purpose of this application is to improve civil discourse on potential fuel reserves
             so that as a country we can develop optimal policy decisions during times of crisis.
             The initiatives represented here do not represent any policy from the Opportunity Party
-            nor do we explicitly recommend/oppose any of the initiatives. If you have any feedback,
-            or initiatives you would like explored in this application, please{' '}
+            nor do we explicitly recommend/oppose any of the initiatives. We are actively
+            requesting feedback to adjust the algorithm, baseline inputs, and are interested
+            in hearing about alternative initiatives that could have an impact. Please{' '}
             <a href="https://www.opportunity.org.nz/contact" target="_blank" rel="noopener noreferrer">
-              contact us here
+              get in touch here
             </a>.
           </p>
         </div>
