@@ -93,7 +93,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
           <DollarSign size={18} className="metric-icon" />
           <div>
             <div className="metric-label">
-              {totalAnnualCost < 0 ? 'Annual benefit' : 'Annual cost'}
+              {totalAnnualCost < 0 ? 'Annual GDP benefit' : 'Annual GDP cost'}
             </div>
             <div className="metric-value">
               $<AnimatedNumber
@@ -107,7 +107,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
             </div>
           </div>
         </div>
-        <div className={`result-metric ${costPerExtraDay < 0 ? 'result-metric-benefit' : costPerExtraDay > 0 ? 'result-metric-cost' : ''}`}>
+        <div className={`result-metric mobile-hidden ${costPerExtraDay < 0 ? 'result-metric-benefit' : costPerExtraDay > 0 ? 'result-metric-cost' : ''}`}>
           {costPerExtraDay < 0 ? <TrendingUp size={18} className="metric-icon" /> : <TrendingDown size={18} className="metric-icon" />}
           <div>
             <div className="metric-label">
