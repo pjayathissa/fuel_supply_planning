@@ -1239,8 +1239,13 @@ h1, h2, h3, h4 {
     letter-spacing: 0.08em;
   }
 
-  .header-content {
+  .header-content .header-subtitle {
     display: none;
+  }
+
+  .header-title {
+    font-size: 1rem;
+    margin-bottom: 0;
   }
 
   .main-layout {
