@@ -49,7 +49,7 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
   const fuelSavedDisplay =
     result && result.active
       ? result.dailyFuelSaved > 0
-        ? `${(result.dailyFuelSaved / 1e6).toFixed(2)}M L/day saved`
+        ? `~${(result.dailyFuelSaved / 1e6).toFixed(1)}M L/day saved`
         : isDemandSmoothing
           ? 'Demand smoothing — no direct fuel saving'
           : ''
