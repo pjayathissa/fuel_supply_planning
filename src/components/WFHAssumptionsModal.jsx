@@ -327,12 +327,6 @@ export default function WFHAssumptionsModal({ isOpen, onClose }) {
               captures the overall shape but does not match every data point
               exactly — the component estimates are the primary analysis.
             </p>
-            <div className="wfh-formula-code">
-              <code>
-                const impact = (300 + 1465 * d - 830 * Math.pow(d, 2) + 65 *
-                Math.pow(d, 3)) * 1_000_000;
-              </code>
-            </div>
           </section>
 
           {/* Methodology */}
