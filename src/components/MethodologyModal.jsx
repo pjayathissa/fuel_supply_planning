@@ -50,15 +50,15 @@ export default function MethodologyModal({ isOpen, onClose }) {
           <section className="methodology-section">
             <h3>Data Sources</h3>
             <ul>
-              <li>MBIE Energy in New Zealand 2025</li>
-              <li>MBIE weekly fuel stock reports (March 2026)</li>
-              <li>IEA 10-Point Plan to Cut Oil Use (2022)</li>
-              <li>EHINZ transport mode data (2023 Census)</li>
-              <li>EECA / Gen Less commuting research</li>
-              <li>Ministry of Transport Household Travel Survey</li>
-              <li>Natural Resources Canada fuel efficiency research</li>
-              <li>NZ Transport Agency VKT data</li>
-              <li>Treasury Half Year Economic and Fiscal Update</li>
+              <li><a href="https://www.mbie.govt.nz/building-and-energy/energy-and-natural-resources/energy-statistics-and-modelling/energy-publications-and-technical-papers/energy-in-new-zealand/" target="_blank" rel="noopener noreferrer">MBIE Energy in New Zealand 2025</a></li>
+              <li><a href="https://www.mbie.govt.nz/building-and-energy/energy-and-natural-resources/energy-statistics-and-modelling/energy-statistics/oil-statistics" target="_blank" rel="noopener noreferrer">MBIE weekly fuel stock reports</a> (March 2026)</li>
+              <li><a href="https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use" target="_blank" rel="noopener noreferrer">IEA 10-Point Plan to Cut Oil Use</a> (2022)</li>
+              <li><a href="https://www.ehinz.ac.nz/indicators/transport/main-mode-of-transport-to-work/" target="_blank" rel="noopener noreferrer">EHINZ transport mode data</a> (2023 Census)</li>
+              <li><a href="https://www.genless.govt.nz/for-business/vehicles-and-transport/commute-sustainably/" target="_blank" rel="noopener noreferrer">EECA / Gen Less commuting research</a></li>
+              <li><a href="https://www.transport.govt.nz/statistics-and-insights/household-travel" target="_blank" rel="noopener noreferrer">Ministry of Transport Household Travel Survey</a></li>
+              <li><a href="https://natural-resources.canada.ca/energy-efficiency/transportation-alternative-fuels/personal-vehicles/fuel-efficient-driving-techniques/21038" target="_blank" rel="noopener noreferrer">Natural Resources Canada fuel efficiency research</a></li>
+              <li><a href="https://www.transport.govt.nz/statistics-and-insights/road-transport/sheet/vehicle-kms-travelled" target="_blank" rel="noopener noreferrer">NZ Transport Agency VKT data</a></li>
+              <li><a href="https://www.treasury.govt.nz/publications/efu/half-year-economic-and-fiscal-update-2025" target="_blank" rel="noopener noreferrer">Treasury Half Year Economic and Fiscal Update</a></li>
             </ul>
           </section>
 
@@ -72,10 +72,11 @@ export default function MethodologyModal({ isOpen, onClose }) {
               workers who commute by car. The model calculates the fraction of
               weekly commute trips eliminated, applies average commute fuel use
               (2.1 litres/day), and applies a 15% rebound factor (some WFH
-              workers make non-commute trips). Economic costs scale
-              non-linearly — the first WFH day costs relatively little ($200M
-              from CBD spending loss), but costs increase at roughly
-              days<sup>1.8</sup> as productivity impacts compound.
+              workers make non-commute trips). Economic impact is modelled as a
+              cubic polynomial that accounts for productivity effects, CBD
+              retail/hospitality loss, congestion relief, innovation impacts,
+              household savings, and employer savings — yielding a net benefit
+              at low WFH levels that diminishes as days increase.
             </p>
 
             <h4>2. Public Transport Mode Shift</h4>
@@ -83,17 +84,19 @@ export default function MethodologyModal({ isOpen, onClose }) {
               A percentage increase in PT use shifts commuters from private car to
               existing services. The fuel saving equals shifted commuters times
               average daily commute fuel. Economic cost reflects the extra commute
-              time (PT is ~50 minutes longer round-trip, of which 70% is
-              unproductive at $30/hour), offset by congestion reduction benefits
-              (~$15/day per car removed).
+              time (~20 minutes per day, of which 60% is productive — the
+              remaining 40% is valued as unproductive time at $30/hour), offset
+              by congestion reduction benefits (~$15/day per car removed). When
+              WFH is active, the mode shift only applies on days people commute.
             </p>
 
             <h4>3. Cycling & Walking Mode Shift</h4>
             <p>
               Similar to PT, but active commuters tend to have shorter trips (85%
               of average fuel use). The economic impact is a net benefit:
-              health gains (1.5 fewer sick days at $350/day) plus household fuel
-              savings, applied at a conservative 30%.
+              health gains (1.5 fewer sick days at $350/day), household fuel
+              savings, and congestion reduction ($15/day per car removed). When
+              WFH is active, the mode shift only applies on days people commute.
             </p>
 
             <h4>4. Speed Limit Reduction</h4>
@@ -115,9 +118,10 @@ export default function MethodologyModal({ isOpen, onClose }) {
             <h4>5. Carpooling</h4>
             <p>
               Increasing average vehicle occupancy from 1.15 reduces the number of
-              commuter car trips needed. Commuter trips are approximately 20% of
-              all petrol use. The economic impact is a small net benefit (30% of
-              fuel savings) as riders share fuel costs.
+              commuter car trips needed. The fuel saving is applied to all
+              935,000 office car commuters at their average daily commute fuel
+              use (2.1 L/day). The economic impact is a small net benefit (30%
+              of annual fuel savings value) as riders share fuel costs.
             </p>
 
             <h4>6. Car-Free Sundays</h4>
@@ -144,8 +148,8 @@ export default function MethodologyModal({ isOpen, onClose }) {
             <p>
               A national campaign promoting fuel-efficient driving techniques.
               Applied at 50% effectiveness (not everyone adopts, and urban driving
-              where it helps most is ~50% of total). The only economic cost is the
-              campaign itself ($8M/year).
+              where it helps most is ~50% of total). The economic cost is the
+              campaign itself ($8M/year), offset by household fuel cost savings.
             </p>
 
             <h4>9. Freight Consolidation</h4>
