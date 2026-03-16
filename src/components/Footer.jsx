@@ -1,4 +1,4 @@
-import archLogo from '/opportunity-arch.svg';
+import archLogo from '/opportunity-logo-white.svg';
 
 export default function Footer() {
   return (
@@ -38,8 +38,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="footer-bottom">
           <div className="footer-logo-small">
-            <img src={archLogo} alt="" className="footer-arch" />
-            <span className="footer-logo-text">OPPORTUNITY</span>
+            <img src={archLogo} alt="Opportunity Party" className="footer-arch" />
           </div>
           <p className="footer-copyright">
             &copy; {new Date().getFullYear()} The Opportunity Party
