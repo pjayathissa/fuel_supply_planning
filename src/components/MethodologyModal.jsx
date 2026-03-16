@@ -1,10 +1,10 @@
-import { X } from 'lucide-react';
+import { X, ExternalLink } from 'lucide-react';
 
 /**
  * Modal displaying methodology, data sources, per-measure formulas,
  * limitations, and disclaimer.
  */
-export default function MethodologyModal({ isOpen, onClose }) {
+export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions }) {
   if (!isOpen) return null;
 
   return (
@@ -78,6 +78,12 @@ export default function MethodologyModal({ isOpen, onClose }) {
               household savings, and employer savings — yielding a net benefit
               at low WFH levels that diminishes as days increase.
             </p>
+            {onOpenWfhAssumptions && (
+              <button className="wfh-detail-link" onClick={onOpenWfhAssumptions}>
+                <ExternalLink size={12} />
+                View detailed WFH GDP impact model &amp; component breakdown
+              </button>
+            )}
 
             <h4>2. Public Transport Mode Shift</h4>
             <p>

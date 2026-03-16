@@ -1511,6 +1511,225 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ─── WFH Assumptions Modal ────────────────────────────────────────────── */
+
+.wfh-modal-content {
+  max-width: 960px;
+}
+
+/* Chart */
+.wfh-chart-container {
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.wfh-chart-caption {
+  font-size: 0.75rem;
+  color: var(--grey-400);
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+/* Table */
+.wfh-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+}
+
+.wfh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+}
+
+.wfh-th {
+  padding: var(--space-sm) var(--space-sm);
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  background: var(--grey-800);
+  color: white;
+  white-space: nowrap;
+}
+
+.wfh-th-right {
+  text-align: right;
+}
+
+.wfh-th-highlight {
+  background: var(--grey-700);
+}
+
+.wfh-td {
+  padding: 6px var(--space-sm);
+}
+
+.wfh-td-label {
+  font-weight: 600;
+  color: var(--grey-800);
+}
+
+.wfh-td-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.wfh-cell-positive {
+  color: var(--teal);
+}
+
+.wfh-cell-negative {
+  color: var(--red);
+}
+
+.wfh-row-even {
+  background: white;
+}
+
+.wfh-row-odd {
+  background: var(--grey-50);
+}
+
+.wfh-row-highlight {
+  outline: 2px solid rgba(0, 180, 160, 0.4);
+  outline-offset: -2px;
+  font-weight: 600;
+}
+
+.wfh-td-net {
+  font-weight: 700;
+}
+
+.wfh-net-positive {
+  color: var(--teal);
+  background: var(--teal-bg);
+}
+
+.wfh-net-negative {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+/* Formula section */
+.wfh-formula-section {
+  background: var(--teal-bg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 180, 160, 0.2);
+}
+
+.wfh-formula-section h3 {
+  color: var(--navy);
+  border-bottom-color: rgba(0, 180, 160, 0.2);
+}
+
+.wfh-formula-text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 0.95rem !important;
+}
+
+.wfh-formula-note {
+  font-size: 0.82rem !important;
+  color: var(--grey-600) !important;
+}
+
+.wfh-formula-code {
+  margin-top: var(--space-sm);
+  background: rgba(0, 180, 160, 0.1);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.wfh-formula-code code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  color: var(--navy);
+  word-break: break-all;
+}
+
+/* Methodology footnote */
+.wfh-methodology-footnote {
+  color: var(--grey-400) !important;
+  font-style: italic;
+  margin-top: var(--space-lg);
+}
+
+/* Tooltip */
+.wfh-tooltip {
+  background: white;
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-md);
+  font-size: 0.78rem;
+  max-width: 260px;
+  font-family: var(--font-sans);
+}
+
+.wfh-tooltip-title {
+  font-weight: 700;
+  color: var(--grey-800);
+  margin-bottom: var(--space-sm);
+}
+
+.wfh-tooltip-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wfh-tooltip-positive {
+  color: var(--teal);
+}
+
+.wfh-tooltip-negative {
+  color: var(--red);
+}
+
+.wfh-tooltip-divider {
+  border: none;
+  border-top: 1px solid var(--grey-200);
+  margin: var(--space-xs) 0;
+}
+
+.wfh-tooltip-net {
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.wfh-tooltip-formula {
+  color: var(--navy);
+  font-style: italic;
+}
+
+/* WFH detail link in measure card */
+.wfh-detail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--teal);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color 0.15s;
+  margin-top: var(--space-sm);
+}
+
+.wfh-detail-link:hover {
+  color: var(--navy);
+  text-decoration: underline;
+}
+
 /* ─── Recharts overrides ────────────────────────────────────────────────── */
 
 .recharts-text {

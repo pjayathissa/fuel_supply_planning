@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertTriangle, ChevronDown, ChevronUp, RotateCcw, Info } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ChevronUp, RotateCcw, Info, ExternalLink } from 'lucide-react';
 import SliderInput from './SliderInput';
 import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS } from '../constants/defaults';
 
@@ -8,7 +8,7 @@ import { BASELINE_DEFAULTS, MEASURE_PARAMS, MEASURE_ASSUMPTIONS } from '../const
  * Supports toggle on/off, slider adjustment, emergency styling,
  * and an expandable section showing relevant baseline parameters and assumptions.
  */
-export default function MeasureCard({ measure, state, onChange, result, params, onParamsChange }) {
+export default function MeasureCard({ measure, state, onChange, result, params, onParamsChange, onOpenWfhAssumptions }) {
   const { id, name, description, note, hasSlider, sliderConfig, isEmergency, isDemandSmoothing, isLongTerm } =
     measure;
   const { enabled, value } = state;
@@ -175,6 +175,15 @@ export default function MeasureCard({ measure, state, onChange, result, params, 
                           <li key={i}>{a}</li>
                         ))}
                       </ul>
+                      {onOpenWfhAssumptions && (
+                        <button
+                          className="wfh-detail-link"
+                          onClick={onOpenWfhAssumptions}
+                        >
+                          <ExternalLink size={12} />
+                          View detailed WFH GDP impact model
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

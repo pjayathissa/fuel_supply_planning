@@ -8,6 +8,7 @@ import BaselinePanel from './components/BaselinePanel';
 import MeasureList from './components/MeasureList';
 import ResultsDashboard from './components/ResultsDashboard';
 import MethodologyModal from './components/MethodologyModal';
+import WFHAssumptionsModal from './components/WFHAssumptionsModal';
 
 /**
  * Extract flat parameter values from BASELINE_DEFAULTS config objects.
@@ -38,6 +39,7 @@ export default function App() {
   const [params, setParams] = useState(getDefaultParams);
   const [measureStates, setMeasureStates] = useState(getDefaultMeasureStates);
   const [methodologyOpen, setMethodologyOpen] = useState(false);
+  const [wfhAssumptionsOpen, setWfhAssumptionsOpen] = useState(false);
   const [showChart, setShowChart] = useState(false);
 
   // Recalculate results whenever params or measure states change
@@ -81,6 +83,7 @@ export default function App() {
             results={results}
             params={params}
             onParamsChange={setParams}
+            onOpenWfhAssumptions={() => setWfhAssumptionsOpen(true)}
           />
           <BaselinePanel params={params} onParamsChange={setParams} />
 
@@ -121,6 +124,15 @@ export default function App() {
       <MethodologyModal
         isOpen={methodologyOpen}
         onClose={() => setMethodologyOpen(false)}
+        onOpenWfhAssumptions={() => {
+          setMethodologyOpen(false);
+          setWfhAssumptionsOpen(true);
+        }}
+      />
+
+      <WFHAssumptionsModal
+        isOpen={wfhAssumptionsOpen}
+        onClose={() => setWfhAssumptionsOpen(false)}
       />
 
       <Footer />
