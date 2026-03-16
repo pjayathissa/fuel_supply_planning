@@ -82,9 +82,7 @@ export default function SliderInput({
         onChange={reversed ? handleInternalChange : handleChange}
         className="slider-range"
         style={{
-          background: reversed
-            ? `linear-gradient(to right, #e2e8f0 0%, #e2e8f0 ${100 - fillPercent}%, #0D9488 ${100 - fillPercent}%, #0D9488 100%)`
-            : `linear-gradient(to right, #0D9488 0%, #0D9488 ${fillPercent}%, #e2e8f0 ${fillPercent}%, #e2e8f0 100%)`,
+          background: `linear-gradient(to right, #0D9488 0%, #0D9488 ${fillPercent}%, #e2e8f0 ${fillPercent}%, #e2e8f0 100%)`,
         }}
       />
       {isDiscrete && (
