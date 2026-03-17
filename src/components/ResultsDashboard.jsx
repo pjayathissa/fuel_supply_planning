@@ -64,11 +64,11 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
         <div className="result-metric">
           <TrendingDown size={18} className="metric-icon" />
           <div>
-            <div className="metric-label">Demand reduction</div>
+            <div className="metric-label">Est. demand reduction</div>
             <div className="metric-value">
               <AnimatedNumber
                 value={hasActiveMeasures ? combinedDemandReduction * 100 : 0}
-                formatter={(v) => `${v.toFixed(1)}%`}
+                formatter={(v) => `~${v.toFixed(1)}%`}
               />
             </div>
           </div>
@@ -76,11 +76,11 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
         <div className="result-metric">
           <Fuel size={18} className="metric-icon" />
           <div>
-            <div className="metric-label">Daily fuel saved</div>
+            <div className="metric-label">Est. daily fuel saved</div>
             <div className="metric-value">
               <AnimatedNumber
                 value={hasActiveMeasures ? combinedDailyFuelSaved / 1e6 : 0}
-                formatter={(v) => `${v.toFixed(2)}M L`}
+                formatter={(v) => `~${v.toFixed(1)}M L`}
               />
             </div>
           </div>
@@ -93,10 +93,10 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
           <DollarSign size={18} className="metric-icon" />
           <div>
             <div className="metric-label">
-              {totalAnnualCost < 0 ? 'Annual benefit' : 'Annual cost'}
+              {totalAnnualCost < 0 ? 'Est. annual GDP benefit' : 'Est. annual GDP cost'}
             </div>
             <div className="metric-value">
-              $<AnimatedNumber
+              ~$<AnimatedNumber
                 value={hasActiveMeasures ? parseFloat(formatDollarsAnimated(totalAnnualCost)) : 0}
                 formatter={(v) => {
                   const abs = Math.abs(v);
@@ -107,14 +107,14 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
             </div>
           </div>
         </div>
-        <div className={`result-metric ${costPerExtraDay < 0 ? 'result-metric-benefit' : costPerExtraDay > 0 ? 'result-metric-cost' : ''}`}>
+        <div className={`result-metric mobile-hidden ${costPerExtraDay < 0 ? 'result-metric-benefit' : costPerExtraDay > 0 ? 'result-metric-cost' : ''}`}>
           {costPerExtraDay < 0 ? <TrendingUp size={18} className="metric-icon" /> : <TrendingDown size={18} className="metric-icon" />}
           <div>
             <div className="metric-label">
-              {costPerExtraDay < 0 ? 'Saving per reserve day' : 'Cost per reserve day'}
+              {costPerExtraDay < 0 ? 'Est. saving per reserve day' : 'Est. cost per reserve day'}
             </div>
             <div className="metric-value">
-              {hasActiveMeasures && extraDays > 0 ? formatDollars(Math.abs(costPerExtraDay)) : '—'}
+              {hasActiveMeasures && extraDays > 0 ? `~${formatDollars(Math.abs(costPerExtraDay))}` : '—'}
             </div>
           </div>
         </div>

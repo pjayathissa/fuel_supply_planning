@@ -24,14 +24,12 @@ export default function Footer() {
           <div className="footer-nav-column">
             <h4 className="footer-nav-heading">Party</h4>
             <a href="https://www.opportunity.org.nz/" target="_blank" rel="noopener noreferrer">Main Website</a>
-            <a href="https://www.opportunity.org.nz/team" target="_blank" rel="noopener noreferrer">Team</a>
             <a href="https://www.opportunity.org.nz/abundant-energy" target="_blank" rel="noopener noreferrer">Energy Policy</a>
           </div>
           <div className="footer-nav-column">
             <h4 className="footer-nav-heading">Get Involved</h4>
             <a href="https://www.opportunity.org.nz/events" target="_blank" rel="noopener noreferrer">Events</a>
             <a href="https://www.opportunity.org.nz/contact" target="_blank" rel="noopener noreferrer">Contact</a>
-            <a href="https://shop.opportunity.org.nz/" target="_blank" rel="noopener noreferrer">Shop</a>
           </div>
         </div>
 
