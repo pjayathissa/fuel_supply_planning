@@ -8,9 +8,9 @@ export default function Header() {
           <img src={archLogo} alt="Opportunity Party" className="header-arch" />
         </div>
         <div className="header-content">
-          <h1 className="header-title">NZ Fuel Reserves Impact Calculator</h1>
+          <h1 className="header-title">The People's Petrol Calculator</h1>
           <p className="header-subtitle">
-            Exploring demand-restraint measures for fuel supply disruptions
+            Extending NZ's Fuel Reserves. A tool for everyday Kiwis to understand our fuel supply options.
           </p>
         </div>
       </div>
