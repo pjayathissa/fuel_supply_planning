@@ -1,7 +1,8 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { BookOpen, BarChart3 } from 'lucide-react';
 import { BASELINE_DEFAULTS, MEASURES } from './constants/defaults';
 import { calculateAll } from './utils/calculations';
+import { decodeScenario, encodeScenario } from './utils/sharing';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import BaselinePanel from './components/BaselinePanel';
@@ -9,6 +10,7 @@ import MeasureList from './components/MeasureList';
 import ResultsDashboard from './components/ResultsDashboard';
 import MethodologyModal from './components/MethodologyModal';
 import WFHAssumptionsModal from './components/WFHAssumptionsModal';
+import ShareButton from './components/ShareButton';
 
 /**
  * Extract flat parameter values from BASELINE_DEFAULTS config objects.
@@ -35,12 +37,36 @@ function getDefaultMeasureStates() {
   return states;
 }
 
+/**
+ * Read initial state from URL if a shared scenario is present.
+ */
+function getInitialState() {
+  const scenario = decodeScenario(window.location.search);
+  const defaultParams = getDefaultParams();
+  const defaultMeasures = getDefaultMeasureStates();
+
+  if (!scenario) return { params: defaultParams, measureStates: defaultMeasures };
+
+  return {
+    params: { ...defaultParams, ...scenario.paramOverrides },
+    measureStates: scenario.measureStates,
+  };
+}
+
 export default function App() {
-  const [params, setParams] = useState(getDefaultParams);
-  const [measureStates, setMeasureStates] = useState(getDefaultMeasureStates);
+  const [initial] = useState(getInitialState);
+  const [params, setParams] = useState(initial.params);
+  const [measureStates, setMeasureStates] = useState(initial.measureStates);
   const [methodologyOpen, setMethodologyOpen] = useState(false);
   const [wfhAssumptionsOpen, setWfhAssumptionsOpen] = useState(false);
   const [showChart, setShowChart] = useState(false);
+
+  // Sync URL with current state (without triggering navigation)
+  useEffect(() => {
+    const query = encodeScenario(measureStates, params);
+    const newURL = `${window.location.pathname}${query}${window.location.hash}`;
+    window.history.replaceState(null, '', newURL);
+  }, [measureStates, params]);
 
   // Recalculate results whenever params or measure states change
   const results = useMemo(
@@ -87,8 +113,9 @@ export default function App() {
           />
           <BaselinePanel params={params} onParamsChange={setParams} />
 
-          {/* Methodology button — mobile only (moves to bottom) */}
+          {/* Action buttons — mobile only (moves to bottom) */}
           <div className="mobile-methodology">
+            <ShareButton measureStates={measureStates} params={params} />
             <button
               className="action-btn methodology-btn"
               onClick={() => setMethodologyOpen(true)}
@@ -110,6 +137,7 @@ export default function App() {
 
           {/* Action buttons — desktop only */}
           <div className="action-buttons desktop-actions">
+            <ShareButton measureStates={measureStates} params={params} />
             <button
               className="action-btn methodology-btn"
               onClick={() => setMethodologyOpen(true)}
