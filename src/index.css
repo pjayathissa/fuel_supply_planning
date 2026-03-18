@@ -1135,7 +1135,6 @@ h1, h2, h3, h4 {
 
 .share-url-input {
   flex: 1;
-  min-width: 0;
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--grey-200);
   border-radius: var(--radius-sm);
@@ -1384,6 +1383,15 @@ h1, h2, h3, h4 {
   .preset-btn {
     text-align: center;
   }
+
+  .share-url-row {
+    flex-direction: column;
+  }
+
+  .share-copy-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1425,16 +1433,6 @@ h1, h2, h3, h4 {
 
 }
 
-@media (max-width: 600px) {
-  .share-url-input {
-    font-size: 0.7rem;
-    padding: var(--space-xs) var(--space-sm);
-  }
-
-  .share-copy-btn {
-    padding: var(--space-xs);
-  }
-}
 
 /* ─── Footer ───────────────────────────────────────────────────────────── */
 
