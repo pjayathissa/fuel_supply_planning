@@ -1421,6 +1421,15 @@ h1, h2, h3, h4 {
     padding: var(--space-md);
   }
 
+  .share-url-input {
+    font-size: 0.7rem;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .share-copy-btn {
+    padding: var(--space-xs);
+  }
+
 }
 
 /* ─── Footer ───────────────────────────────────────────────────────────── */
