@@ -1,6 +1,6 @@
-# NZ Fuel Reserve Impact Calculator
+# Fuel Reserves Estimator
 
-An interactive web application for modelling the impact of demand-reduction measures on New Zealand's fuel supply reserves. Users can adjust baseline parameters, toggle individual policy measures, and instantly see how the combined effect extends the country's onshore reserve days.
+An open-source interactive web application for modelling the impact of demand-reduction measures on New Zealand's fuel supply reserves. Users can adjust baseline parameters, toggle individual policy measures, and instantly see how the combined effect extends the country's onshore reserve days.
 
 ## Features
 

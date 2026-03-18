@@ -357,7 +357,7 @@ export const MEASURES = [
     sliderConfig: {
       label: 'Target public transport mode share',
       min: 6.5,
-      max: 20,
+      max: 30,
       step: 0.5,
       default: 8.5,
       unit: '%',
@@ -373,7 +373,7 @@ export const MEASURES = [
     sliderConfig: {
       label: 'Target active mode share',
       min: 7.5,
-      max: 20,
+      max: 30,
       step: 0.5,
       default: 10,
       unit: '%',
