@@ -304,6 +304,7 @@ export const MEASURE_ASSUMPTIONS = {
   carFreeSundays: [
     'Sunday accounts for ~12% of weekly petrol consumption',
     '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
+    'Significant social disruption likely — impacts shift workers, caregivers, disabled people, and small businesses.',
   ],
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
@@ -382,10 +383,10 @@ export const MEASURES = [
   {
     id: 'publicTransport',
     name: 'Public Transport Mode Shift',
-    description: 'Urban residents near good public transport shift from private car to PT. Applied to ~2M PT proximity residents across major cities, not just office workers. Current PT mode share is 6.5%.',
+    description: 'Urban residents near good public transport shift from private car to public transport. Applied to ~2M public transport proximity residents across major cities. Current mode share is 6.5%.',
     hasSlider: true,
     sliderConfig: {
-      label: 'Target public transport mode share',
+      label: '% of urban residents shifted to public transport',
       min: 6.5,
       max: 30,
       step: 0.5,
@@ -398,7 +399,7 @@ export const MEASURES = [
   {
     id: 'cycling',
     name: 'Cycling & Walking Mode Shift',
-    description: 'Short car trips (under 10 km) shifted to cycling, e-bikes, or walking. These trips are ~70% of all car trips but only ~20% of VKT.',
+    description: 'Short car trips (under 10 km) shifted to cycling, e-bikes, or walking. While these trips are ~70% of all car trips, they are only ~20% of VKT.',
     hasSlider: true,
     sliderConfig: {
       label: '% of under-10 km car trips shifted',
