@@ -1105,6 +1105,16 @@ h1, h2, h3, h4 {
   color: var(--teal);
 }
 
+.share-btn:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+.share-btn--copied {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
 /* ─── Modal ─────────────────────────────────────────────────────────────── */
 
 .modal-overlay {
