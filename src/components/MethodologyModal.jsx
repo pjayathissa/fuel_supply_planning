@@ -98,6 +98,37 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
               other workers across Auckland, Wellington, Christchurch, Hamilton,
               and Tauranga.
             </p>
+
+            <table className="methodology-table">
+              <thead>
+                <tr>
+                  <th>Service level</th>
+                  <th>Coverage</th>
+                  <th>Residents</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>High frequency (&le;15 min)</td>
+                  <td>Auckland FTN + Wellington core</td>
+                  <td>~700k + ~200k = ~900,000</td>
+                </tr>
+                <tr>
+                  <td>Usable (&le;30 min peak)</td>
+                  <td>Auckland wider + Wellington 77% + Christchurch core + Hamilton core</td>
+                  <td>~1,050k + ~335k + ~180k + ~60k = ~1,625,000</td>
+                </tr>
+                <tr>
+                  <td>Any regular service (&le;60 min)</td>
+                  <td>All of the above + Tauranga, Dunedin, smaller centres</td>
+                  <td>~1,800,000–2,000,000</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="methodology-table-note">
+              Total population of 16 urban areas in New Zealand: 3,287,000 people.
+            </p>
+
             <p>
               The slider sets a target absolute PT mode share (baseline: 6.5%).
               Shifted commuters = PT proximity residents × (target share − baseline

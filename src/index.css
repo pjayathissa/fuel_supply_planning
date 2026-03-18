@@ -1246,6 +1246,38 @@ h1, h2, h3, h4 {
   line-height: 1.5;
 }
 
+.methodology-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: var(--space-md) 0;
+}
+
+.methodology-table th,
+.methodology-table td {
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--grey-200);
+  color: var(--grey-700);
+  line-height: 1.4;
+}
+
+.methodology-table th {
+  font-weight: 600;
+  color: var(--grey-800);
+  background: var(--grey-50);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.methodology-table-note {
+  font-size: 0.85rem;
+  color: var(--grey-500);
+  font-style: italic;
+  margin-top: calc(-1 * var(--space-sm));
+}
+
 .methodology-disclaimer {
   background: var(--amber-bg);
   padding: var(--space-lg);
