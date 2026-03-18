@@ -35,6 +35,12 @@ export const BASELINE_DEFAULTS = {
     label: 'Office workers (car commuters)',
     tooltip: '~1.1M office workers × 85% who commute by car. Source: Stats NZ 2023 Census.',
   },
+  ptProximityResidents: {
+    value: 2_000_000,
+    unit: 'people',
+    label: 'PT proximity residents',
+    tooltip: 'Estimated number of people in urban areas with good public transport access who currently commute by car. Includes office workers, retail, healthcare, education, trades, and other workers in Auckland, Wellington, Christchurch, Hamilton, and Tauranga. Source: Stats NZ 2023 Census, regional council PT coverage estimates.',
+  },
   avgReturnCommute: {
     value: 21.4,
     unit: 'km',
@@ -106,6 +112,26 @@ export const BASELINE_DEFAULTS = {
     label: 'Total annual VKT',
     tooltip: 'Total vehicle kilometres travelled per year on NZ roads. Source: MoT/NZTA VKT data (12 months to September 2024).',
     displayDivisor: 1e9,
+  },
+  householdLightVKT: {
+    value: 35e9,
+    unit: 'billion km',
+    label: 'Household light vehicle VKT',
+    tooltip: 'Household light vehicle driving (~35B of 49B total). Excludes commercial/freight. Source: MoT Driver Travel data.',
+    displayDivisor: 1e9,
+  },
+  shortTripVKTShare: {
+    value: 0.20,
+    unit: '%',
+    label: '% of light VKT from trips under 10 km',
+    tooltip: 'Trips under 10 km are ~70% of all car trips but only ~20% of household light VKT (~6.9B km). Source: MoT Household Travel Survey; Mizdrak et al. 2019.',
+    displayMultiplier: 100,
+  },
+  avgShortTripKm: {
+    value: 4.5,
+    unit: 'km',
+    label: 'Average short trip distance',
+    tooltip: 'Weighted average distance for car trips under 10 km (under-2km avg ~1.2 km, 2–5 km avg ~3.3 km, 5–10 km avg ~7 km). Source: MoT Household Travel Survey.',
   },
   evFleetShare: {
     value: 0.055,
@@ -228,8 +254,8 @@ export const getTotalCommuters = (params) => {
  */
 export const MEASURE_PARAMS = {
   wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays'],
-  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
-  cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  publicTransport: ['ptModeShare', 'ptProximityResidents', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  cycling: ['householdLightVKT', 'shortTripVKTShare', 'avgShortTripKm', 'fleetFuelEconomy', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'annualVKT', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
   carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
   carFreeSundays: ['dailyPetrolConsumption', 'carFreeSundayComplianceFactor', 'carFreeSundayWelfareCost'],
@@ -251,18 +277,19 @@ export const MEASURE_ASSUMPTIONS = {
     'Economic cost impact based on: productivity, CBD retail/hospitality loss, congestion, innovation, household savings, employer savings',
   ],
   publicTransport: [
-    'Slider shows target absolute PT mode share — shifted commuters = total commuters × (target share − baseline share)',
+    'Applied to ~2M PT proximity residents (all car commuters near good PT, not just office workers)',
+    'Slider shows target absolute PT mode share — shifted commuters = PT proximity residents × (target share − baseline share)',
     'PT adds ~20 min/day to commute; productive fraction is adjustable → remainder is unproductive time cost',
-    '230 working days/year (adjusted down if WFH is active)',
+    'WFH interaction: only the office-worker fraction of the PT pool is affected by WFH days',
     'Congestion benefit applied per car removed from the road',
   ],
   cycling: [
-    'Slider shows target absolute active mode share — shifted commuters = total commuters × (target share − baseline share)',
-    '0.85× discount — active commuters tend to have shorter trips',
-    'Health benefit: 1.5 fewer sick days at $350/day per shifted commuter',
-    'Household fuel savings counted as economic benefit',
-    'Congestion benefit applied per car removed from the road',
-    '230 working days/year (adjusted down if WFH is active)',
+    'Trips under 10 km = ~70% of car trips but only ~20% of household light VKT (~6.9B of ~35B km)',
+    'Slider sets % of under-10 km VKT shifted to cycling/walking — fuel saved = shifted VKT × fleet fuel economy',
+    'Shifted trips estimated from VKT ÷ average short trip distance (4.5 km)',
+    'Health benefit: 1.5 fewer sick days at $350/day per person shifted',
+    'Household fuel savings and congestion benefit ($15/day per car removed) counted as economic benefit',
+    'Not affected by WFH — short trips include errands, school runs, shopping, not just commuting',
   ],
   speedLimit: [
     'Fuel savings looked up from pre-computed table accounting for NZ road lengths at each speed band',
@@ -277,6 +304,7 @@ export const MEASURE_ASSUMPTIONS = {
   carFreeSundays: [
     'Sunday accounts for ~12% of weekly petrol consumption',
     '60% of population in affected cities (Auckland, Wellington, Christchurch, Hamilton)',
+    'Significant social disruption likely — impacts shift workers, caregivers, disabled people, and small businesses.',
   ],
   oddEvenPlates: [
     'Applied to all private vehicles, not just commuters',
@@ -319,7 +347,10 @@ export const MEASURE_REFERENCES = {
   ],
   cycling: [
     { text: 'IEA 10-Point Plan — Point 4: Public transport, cycling & walking', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
-    { text: 'EHINZ 2023 Census commuter mode share data', url: 'https://ehinz.ac.nz/indicators/transport/means-of-travel-to-work/' },
+    { text: 'Gen Less — short car trips in New Zealand', url: 'https://www.genless.govt.nz/for-everyone/transport/walking-and-cycling/' },
+    { text: 'MoT Household Travel Survey', url: 'https://www.transport.govt.nz/statistics-and-insights/household-travel' },
+    { text: 'Mizdrak et al. (2019) — Potential of active transport to improve health, PLOS ONE', url: 'https://pubmed.ncbi.nlm.nih.gov/31412060/' },
+    { text: 'EECA — NZ drives 49 billion km per year', url: 'https://www.eeca.govt.nz/insights/eeca-insights/new-zealands-energy-end-use-database-eeud/' },
   ],
   speedLimit: [
     { text: 'IEA 10-Point Plan — Point 1: Reduce speed limits on highways', url: 'https://www.iea.org/reports/a-10-point-plan-to-cut-oil-use' },
@@ -352,10 +383,10 @@ export const MEASURES = [
   {
     id: 'publicTransport',
     name: 'Public Transport Mode Shift',
-    description: 'Commuters shift from private car to existing public transport services. Current public transport mode share is 6.5%.',
+    description: 'Urban residents near good public transport shift from private car to public transport. Applied to ~2M public transport proximity residents across major cities. Current mode share is 6.5%.',
     hasSlider: true,
     sliderConfig: {
-      label: 'Target public transport mode share',
+      label: '% of urban residents shifted to public transport',
       min: 6.5,
       max: 30,
       step: 0.5,
@@ -368,17 +399,16 @@ export const MEASURES = [
   {
     id: 'cycling',
     name: 'Cycling & Walking Mode Shift',
-    description: 'Commuters shift from private car to cycling, e-bikes, or walking. Current active mode share is 7.5%.',
+    description: 'Short car trips (under 10 km) shifted to cycling, e-bikes, or walking. While these trips are ~70% of all car trips, they are only ~20% of VKT.',
     hasSlider: true,
     sliderConfig: {
-      label: 'Target active mode share',
-      min: 7.5,
-      max: 30,
-      step: 0.5,
+      label: '% of under-10 km car trips shifted',
+      min: 0,
+      max: 50,
+      step: 1,
       default: 10,
       unit: '%',
       isPercentage: true,
-      isAbsoluteModeShare: true,
     },
   },
   {

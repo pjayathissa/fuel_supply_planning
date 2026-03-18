@@ -1105,6 +1105,50 @@ h1, h2, h3, h4 {
   color: var(--teal);
 }
 
+.share-btn:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+.share-btn--copied {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.share-modal {
+  max-width: 520px;
+}
+
+.share-modal-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: var(--space-md);
+}
+
+.share-url-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.share-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--grey-700);
+  background: var(--grey-50);
+}
+
+.share-copy-btn {
+  flex-shrink: 0;
+}
+
 /* ─── Modal ─────────────────────────────────────────────────────────────── */
 
 .modal-overlay {
@@ -1201,6 +1245,38 @@ h1, h2, h3, h4 {
   color: var(--grey-700);
   margin-bottom: var(--space-sm);
   line-height: 1.5;
+}
+
+.methodology-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: var(--space-md) 0;
+}
+
+.methodology-table th,
+.methodology-table td {
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--grey-200);
+  color: var(--grey-700);
+  line-height: 1.4;
+}
+
+.methodology-table th {
+  font-weight: 600;
+  color: var(--grey-800);
+  background: var(--grey-50);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.methodology-table-note {
+  font-size: 0.85rem;
+  color: var(--grey-500);
+  font-style: italic;
+  margin-top: calc(-1 * var(--space-sm));
 }
 
 .methodology-disclaimer {
@@ -1378,6 +1454,18 @@ h1, h2, h3, h4 {
     padding: var(--space-md);
   }
 
+
+}
+
+@media (max-width: 600px) {
+  .share-url-input {
+    font-size: 0.7rem;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .share-copy-btn {
+    padding: var(--space-xs);
+  }
 }
 
 /* ─── Footer ───────────────────────────────────────────────────────────── */
