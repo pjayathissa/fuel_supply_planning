@@ -59,7 +59,7 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
         extendedDays={hasActiveMeasures ? extendedReserveDays : baselineDays}
       />
 
-      {/* Secondary metrics row */}
+      {/* Metrics row */}
       <div className="results-metrics-row">
         <div className="result-metric mobile-hidden">
           <TrendingDown size={18} className="metric-icon" />
@@ -85,10 +85,6 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Economic metrics row */}
-      <div className="results-metrics-row">
         <div className={`result-metric ${totalAnnualCost < 0 ? 'result-metric-benefit' : totalAnnualCost > 0 ? 'result-metric-cost' : ''}`}>
           <DollarSign size={18} className="metric-icon" />
           <div>
