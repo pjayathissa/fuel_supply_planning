@@ -1,8 +1,8 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { BookOpen, BarChart3 } from 'lucide-react';
 import { BASELINE_DEFAULTS, MEASURES } from './constants/defaults';
 import { calculateAll } from './utils/calculations';
-import { decodeScenario, encodeScenario } from './utils/sharing';
+import { decodeScenario } from './utils/sharing';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import BaselinePanel from './components/BaselinePanel';
@@ -60,13 +60,6 @@ export default function App() {
   const [methodologyOpen, setMethodologyOpen] = useState(false);
   const [wfhAssumptionsOpen, setWfhAssumptionsOpen] = useState(false);
   const [showChart, setShowChart] = useState(false);
-
-  // Sync URL with current state (without triggering navigation)
-  useEffect(() => {
-    const query = encodeScenario(measureStates, params);
-    const newURL = `${window.location.pathname}${query}${window.location.hash}`;
-    window.history.replaceState(null, '', newURL);
-  }, [measureStates, params]);
 
   // Recalculate results whenever params or measure states change
   const results = useMemo(
