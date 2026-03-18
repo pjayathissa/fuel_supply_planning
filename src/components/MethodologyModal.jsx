@@ -63,6 +63,8 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
               <li><a href="https://natural-resources.canada.ca/energy-efficiency/transportation-alternative-fuels/personal-vehicles/fuel-efficient-driving-techniques/21038" target="_blank" rel="noopener noreferrer">Natural Resources Canada fuel efficiency research</a></li>
               <li><a href="https://www.transport.govt.nz/statistics-and-insights/road-transport/sheet/vehicle-kms-travelled" target="_blank" rel="noopener noreferrer">NZ Transport Agency VKT data</a></li>
               <li><a href="https://www.treasury.govt.nz/publications/efu/half-year-economic-and-fiscal-update-2025" target="_blank" rel="noopener noreferrer">Treasury Half Year Economic and Fiscal Update</a></li>
+              <li><a href="https://pubmed.ncbi.nlm.nih.gov/31412060/" target="_blank" rel="noopener noreferrer">Mizdrak et al. (2019) — Potential of active transport to improve health, PLOS ONE</a></li>
+              <li><a href="https://www.eeca.govt.nz/insights/eeca-insights/new-zealands-energy-end-use-database-eeud/" target="_blank" rel="noopener noreferrer">EECA Energy End Use Database</a></li>
             </ul>
           </section>
 
@@ -143,13 +145,62 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
 
             <h4>3. Cycling & Walking Mode Shift</h4>
             <p>
-              The slider sets a target absolute active mode share (baseline: 7.5%).
-              Shifted commuters = total commuters × (target share − baseline share).
-              Active commuters tend to have shorter trips (85% of average fuel
-              use). The economic impact is a net benefit: health gains (1.5 fewer
-              sick days at $350/day), household fuel savings, and congestion
-              reduction ($15/day per car removed). When WFH is active, the mode
-              shift only applies on days people commute.
+              New Zealanders drive a collective{' '}
+              <a href="https://www.eeca.govt.nz/insights/eeca-insights/new-zealands-energy-end-use-database-eeud/" target="_blank" rel="noopener noreferrer">
+                49 billion km per year
+              </a>
+              , of which ~35 billion km is household light vehicle driving.
+              While short car trips dominate by number, they are a smaller
+              fraction of total VKT because each trip is short:
+            </p>
+
+            <table className="methodology-table">
+              <thead>
+                <tr>
+                  <th>Distance band</th>
+                  <th>Share of car trips</th>
+                  <th>Share of light VKT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Under 2 km (walkable)</td>
+                  <td>~30%</td>
+                  <td>~3%</td>
+                </tr>
+                <tr>
+                  <td>2–5 km (cyclable)</td>
+                  <td>~26%</td>
+                  <td>~7%</td>
+                </tr>
+                <tr>
+                  <td>5–10 km (e-bike range)</td>
+                  <td>~15%</td>
+                  <td>~9%</td>
+                </tr>
+                <tr style={{fontWeight: 600}}>
+                  <td>Under 10 km combined</td>
+                  <td>~70%</td>
+                  <td>~20% (~6.9B km)</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="methodology-table-note">
+              Sources:{' '}
+              <a href="https://www.genless.govt.nz/for-everyone/transport/walking-and-cycling/" target="_blank" rel="noopener noreferrer">Gen Less</a>,{' '}
+              <a href="https://www.transport.govt.nz/statistics-and-insights/household-travel" target="_blank" rel="noopener noreferrer">MoT Household Travel Survey</a>,{' '}
+              <a href="https://pubmed.ncbi.nlm.nih.gov/31412060/" target="_blank" rel="noopener noreferrer">Mizdrak et al. 2019</a>.
+            </p>
+
+            <p>
+              The slider sets the percentage of under-10 km car VKT shifted to
+              cycling, e-bikes, or walking. Fuel saved = shifted VKT × fleet
+              fuel economy (10 L/100 km). This applies to all short trips —
+              commutes, errands, school runs, shopping — not just work travel,
+              so it is not affected by the WFH setting. The economic impact is
+              a net benefit: health gains (1.5 fewer sick days at $350/day per
+              person shifted), household fuel savings, and congestion reduction
+              ($15/day per car removed).
             </p>
 
             <h4>4. Speed Limit Reduction</h4>

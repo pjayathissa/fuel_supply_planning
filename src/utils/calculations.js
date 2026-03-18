@@ -10,7 +10,7 @@
  * then derive reserve extension, demand reduction %, and cost-effectiveness.
  */
 
-import { getTotalCommuters } from '../constants/defaults';
+// No imports needed from defaults — all params passed in via the params object
 
 // ─── Individual measure calculations ────────────────────────────────────────
 
@@ -85,31 +85,34 @@ export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
 
 /**
  * 3. Cycling & Walking Mode Shift
- * Slider value is the target absolute active mode share (%).
- * Shifted commuters = total commuters × (target share − baseline share).
- * Health/productivity benefits → net economic benefit.
- * Slight discount (0.85×) because active commuters tend to have shorter trips.
- * When WFH is active, mode shift only applies on days people commute.
+ * Slider value is % of under-10 km car VKT shifted to cycling/walking.
+ * Trips under 10 km = ~70% of car trips but only ~20% of household light VKT.
+ * Applies to ALL short trips (commute, errands, school runs, shopping) —
+ * not just commuters, so no WFH interaction.
  */
-export function calcCycling(params, sliderValue, wfhDays = 0) {
-  const targetActiveShare = sliderValue / 100;
-  const totalCommuters = getTotalCommuters(params);
-  const commutingFraction = (5 - wfhDays) / 5;
+export function calcCycling(params, sliderValue) {
+  const shiftFraction = sliderValue / 100;
 
-  const shiftedCommuters =
-    totalCommuters * Math.max(0, targetActiveShare - params.activeModeShare);
-  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * 0.85 * commutingFraction;
+  // Daily short-trip VKT that could be shifted
+  const dailyShortTripVKT = (params.householdLightVKT * params.shortTripVKTShare) / 365;
+  const shiftedDailyVKT = dailyShortTripVKT * shiftFraction;
 
-  // Health benefit: 1.5 fewer sick days at $350/day value
-  const healthBenefit = shiftedCommuters * 350 * 1.5;
-  // Household fuel savings: fuel cost avoided over actual commuting days
-  const workingDaysPerYear = 230 * commutingFraction;
-  const fuelSavingsToHouseholds =
-    shiftedCommuters * params.avgCommuteFuel * params.fuelPricePerLitre * workingDaysPerYear;
-  // Congestion benefit: fewer cars on the road
-  const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;
+  // Fuel saved from shifted VKT
+  const dailyFuelSaved = shiftedDailyVKT * (params.fleetFuelEconomy / 100);
+
+  // Back-calculate shifted trips and people for economic estimates
+  const shiftedTripsPerDay = shiftedDailyVKT / params.avgShortTripKm;
+  const avgShortTripsPerPersonPerDay = 2.5;
+  const shiftedPeople = shiftedTripsPerDay / avgShortTripsPerPersonPerDay;
+
+  // Health benefit: 1.5 fewer sick days at $350/day per person shifted
+  const healthBenefit = shiftedPeople * 350 * 1.5;
+  // Household fuel savings over the year
+  const annualFuelSavings = dailyFuelSaved * 365 * params.fuelPricePerLitre;
+  // Congestion benefit: fewer cars on the road (365 days — not just working days)
+  const congestionBenefit = shiftedPeople * params.congestionBenefitPerCar * 365;
   // Net benefit (negative cost)
-  const annualEconomicCost = -(healthBenefit + fuelSavingsToHouseholds + congestionBenefit);
+  const annualEconomicCost = -(healthBenefit + annualFuelSavings + congestionBenefit);
 
   return {
     dailyFuelSaved,
@@ -400,8 +403,8 @@ export function calculateAll(params, measureStates) {
 
     let result;
     // Pass WFH days to commute-based mode shift measures
-    const isCommuterMeasure = ['publicTransport', 'cycling', 'wfh', 'carpooling'].includes(id);
-    const needsWfhContext = id === 'publicTransport' || id === 'cycling';
+    const isCommuterMeasure = ['publicTransport', 'wfh', 'carpooling'].includes(id);
+    const needsWfhContext = id === 'publicTransport';
 
     if (needsWfhContext) {
       result = calcFn(params, state.value, effectiveWfhDays);
@@ -409,9 +412,10 @@ export function calculateAll(params, measureStates) {
       result = calcFn(params, state.value);
     }
 
-    // Apply ICE fraction discount to commuter-based measures
-    // (EV commuters have no petrol to save)
-    if (isCommuterMeasure && id !== 'evFleetShare') {
+    // Apply ICE fraction discount to petrol-saving measures
+    // (EV drivers have no petrol to save)
+    const needsIceDiscount = isCommuterMeasure || id === 'cycling';
+    if (needsIceDiscount && id !== 'evFleetShare') {
       result = {
         ...result,
         dailyFuelSaved: result.dailyFuelSaved * iceFraction,
