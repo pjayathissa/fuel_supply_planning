@@ -35,6 +35,12 @@ export const BASELINE_DEFAULTS = {
     label: 'Office workers (car commuters)',
     tooltip: '~1.1M office workers × 85% who commute by car. Source: Stats NZ 2023 Census.',
   },
+  ptProximityResidents: {
+    value: 2_000_000,
+    unit: 'people',
+    label: 'PT proximity residents',
+    tooltip: 'Estimated number of people in urban areas with good public transport access who currently commute by car. Includes office workers, retail, healthcare, education, trades, and other workers in Auckland, Wellington, Christchurch, Hamilton, and Tauranga. Source: Stats NZ 2023 Census, regional council PT coverage estimates.',
+  },
   avgReturnCommute: {
     value: 21.4,
     unit: 'km',
@@ -228,7 +234,7 @@ export const getTotalCommuters = (params) => {
  */
 export const MEASURE_PARAMS = {
   wfh: ['officeCarCommuters', 'avgCommuteFuel', 'baselineOfficeDays'],
-  publicTransport: ['ptModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
+  publicTransport: ['ptModeShare', 'ptProximityResidents', 'officeCarCommuters', 'avgCommuteFuel', 'personalTimeCostPerHour', 'productivePtTimeFraction', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   cycling: ['activeModeShare', 'officeCarCommuters', 'avgCommuteFuel', 'congestionBenefitPerCar', 'fuelPricePerLitre'],
   speedLimit: ['dailyPetrolConsumption', 'dailyDieselConsumption', 'annualVKT', 'personalTimeCostPerHour', 'commercialTimeCostPerHour', 'fuelPricePerLitre'],
   carpooling: ['avgCarOccupancy', 'officeCarCommuters', 'avgCommuteFuel', 'fuelPricePerLitre'],
@@ -251,9 +257,10 @@ export const MEASURE_ASSUMPTIONS = {
     'Economic cost impact based on: productivity, CBD retail/hospitality loss, congestion, innovation, household savings, employer savings',
   ],
   publicTransport: [
-    'Slider shows target absolute PT mode share — shifted commuters = total commuters × (target share − baseline share)',
+    'Applied to ~2M PT proximity residents (all car commuters near good PT, not just office workers)',
+    'Slider shows target absolute PT mode share — shifted commuters = PT proximity residents × (target share − baseline share)',
     'PT adds ~20 min/day to commute; productive fraction is adjustable → remainder is unproductive time cost',
-    '230 working days/year (adjusted down if WFH is active)',
+    'WFH interaction: only the office-worker fraction of the PT pool is affected by WFH days',
     'Congestion benefit applied per car removed from the road',
   ],
   cycling: [
@@ -352,7 +359,7 @@ export const MEASURES = [
   {
     id: 'publicTransport',
     name: 'Public Transport Mode Shift',
-    description: 'Commuters shift from private car to existing public transport services. Current public transport mode share is 6.5%.',
+    description: 'Urban residents near good public transport shift from private car to PT. Applied to ~2M PT proximity residents across major cities, not just office workers. Current PT mode share is 6.5%.',
     hasSlider: true,
     sliderConfig: {
       label: 'Target public transport mode share',

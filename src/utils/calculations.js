@@ -48,22 +48,28 @@ export function calcWorkFromHome(params, sliderValue) {
 /**
  * 2. Public Transport Mode Shift
  * Slider value is the target absolute PT mode share (%).
- * Shifted commuters = total commuters × (target share − baseline share).
+ * Applied to the broader PT proximity population (~2M), not just office commuters.
+ * Shifted commuters = PT proximity residents × (target share − baseline share).
  * Economic cost = extra commute time minus congestion reduction benefit.
- * When WFH is active, mode shift only applies on days people commute.
+ * WFH interaction: only the office-worker fraction of the PT pool is affected by WFH days.
  */
 export function calcPublicTransport(params, sliderValue, wfhDays = 0) {
   const targetPtShare = sliderValue / 100;
-  const totalCommuters = getTotalCommuters(params);
-  const commutingFraction = (5 - wfhDays) / 5;
+  const ptPool = params.ptProximityResidents;
 
-  const shiftedCommuters = totalCommuters * Math.max(0, targetPtShare - params.ptModeShare);
-  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * commutingFraction;
+  // Office workers are a subset of PT proximity residents — only they are affected by WFH
+  const officeFraction = Math.min(1, params.officeCarCommuters / ptPool);
+  // Non-office workers commute 5 days/week; office workers are reduced by WFH days
+  const effectiveCommutingFraction =
+    (1 - officeFraction) * 1.0 + officeFraction * ((5 - wfhDays) / 5);
+
+  const shiftedCommuters = ptPool * Math.max(0, targetPtShare - params.ptModeShare);
+  const dailyFuelSaved = shiftedCommuters * params.avgCommuteFuel * effectiveCommutingFraction;
 
   // PT adds ~20 min/day; productive fraction is configurable → remainder is unproductive
   const unproductiveFraction = 1 - params.productivePtTimeFraction;
   const extraHoursPerDay = shiftedCommuters * (20 / 60) * unproductiveFraction;
-  const workingDaysPerYear = 230 * commutingFraction;
+  const workingDaysPerYear = 230 * effectiveCommutingFraction;
   const annualTimeCost = extraHoursPerDay * params.personalTimeCostPerHour * workingDaysPerYear;
 
   const congestionBenefit = shiftedCommuters * params.congestionBenefitPerCar * workingDaysPerYear;

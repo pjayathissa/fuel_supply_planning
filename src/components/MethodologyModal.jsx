@@ -92,14 +92,22 @@ export default function MethodologyModal({ isOpen, onClose, onOpenWfhAssumptions
 
             <h4>2. Public Transport Mode Shift</h4>
             <p>
+              Applied to ~2 million PT proximity residents — all car commuters
+              in urban areas with good public transport access, not just office
+              workers. This includes retail, healthcare, education, trades, and
+              other workers across Auckland, Wellington, Christchurch, Hamilton,
+              and Tauranga.
+            </p>
+            <p>
               The slider sets a target absolute PT mode share (baseline: 6.5%).
-              Shifted commuters = total commuters × (target share − baseline share).
-              The fuel saving equals shifted commuters times average daily commute
-              fuel. Economic cost reflects the extra commute time (~20 minutes per
-              day, of which 60% is productive — the remaining 40% is valued as
-              unproductive time at $30/hour), offset by congestion reduction
-              benefits (~$15/day per car removed). When WFH is active, the mode
-              shift only applies on days people commute.
+              Shifted commuters = PT proximity residents × (target share − baseline
+              share). The fuel saving equals shifted commuters times average daily
+              commute fuel. Economic cost reflects the extra commute time (~20
+              minutes per day, of which 60% is productive — the remaining 40% is
+              valued as unproductive time at $30/hour), offset by congestion
+              reduction benefits (~$15/day per car removed). The WFH interaction
+              only applies to the office-worker fraction of the PT pool — non-office
+              workers commute every working day regardless of WFH policy.
             </p>
 
             <h4>3. Cycling & Walking Mode Shift</h4>
