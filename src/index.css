@@ -1,12 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   NZ Fuel Reserve Impact Calculator — Styles
-   Opportunity Party branding with clean card-based layout
+   Fuel Reserves Estimator — Styles
+   Clean, professional card-based layout
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Colour palette — Opportunity Party branding */
-  --navy: #151A61;
-  --navy-light: #1E2573;
+  /* Colour palette */
+  --navy: #1E293B;
+  --navy-light: #334155;
   --teal: #00B4A0;
   --teal-light: #00DCC8;
   --teal-bg: #E6FAF7;
@@ -98,15 +98,6 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   gap: var(--space-xl);
-}
-
-.header-logo {
-  flex-shrink: 0;
-}
-
-.header-arch {
-  width: 140px;
-  height: auto;
 }
 
 .header-content {
@@ -1238,10 +1229,6 @@ h1, h2, h3, h4 {
     gap: var(--space-md);
   }
 
-  .header-arch {
-    width: 80px;
-  }
-
   .header-content .header-subtitle {
     display: none;
   }
@@ -1430,57 +1417,10 @@ h1, h2, h3, h4 {
   color: white;
 }
 
-.footer-nav {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-xl);
-  margin-bottom: var(--space-xl);
-  padding-bottom: var(--space-xl);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.footer-nav-column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.footer-nav-heading {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--teal-light);
-  margin-bottom: var(--space-xs);
-}
-
-.footer-nav-column a {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.75);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.footer-nav-column a:hover {
-  color: white;
-}
-
 .footer-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.footer-logo-small {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.footer-arch {
-  width: 100px;
-  height: auto;
+  justify-content: center;
 }
 
 .footer-copyright {
@@ -1491,11 +1431,6 @@ h1, h2, h3, h4 {
 @media (max-width: 600px) {
   .footer-inner {
     padding: var(--space-xl) var(--space-md);
-  }
-
-  .footer-nav {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
   }
 
   .footer-bottom {
