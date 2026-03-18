@@ -135,7 +135,7 @@ export default function App() {
         onClose={() => setWfhAssumptionsOpen(false)}
       />
 
-      <Footer />
+      <Footer onOpenMethodology={() => setMethodologyOpen(true)} />
     </div>
   );
 }
