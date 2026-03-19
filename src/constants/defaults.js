@@ -386,7 +386,7 @@ export const MEASURES = [
     description: 'Urban residents near good public transport shift from private car to public transport. Applied to ~2M public transport proximity residents across major cities. Current mode share is 6.5%.',
     hasSlider: true,
     sliderConfig: {
-      label: '% of urban residents shifted to public transport',
+      label: '% of urban residents on public transport',
       min: 6.5,
       max: 30,
       step: 0.5,
