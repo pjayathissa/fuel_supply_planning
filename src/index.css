@@ -153,6 +153,24 @@ h1, h2, h3, h4 {
   border-bottom: 2px solid var(--grey-200);
 }
 
+/* ─── Data freshness indicator ──────────────────────────────────────────── */
+
+.data-freshness {
+  font-size: 0.8rem;
+  color: var(--grey-500);
+  margin-bottom: var(--space-md);
+  margin-top: calc(-1 * var(--space-sm));
+}
+
+.data-freshness a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.data-freshness a:hover {
+  text-decoration: underline;
+}
+
 /* ─── Baseline panel ────────────────────────────────────────────────────── */
 
 .baseline-panel {

@@ -32,7 +32,7 @@ function getDollarUnit(value) {
 /**
  * Main results display — always visible, updates dynamically.
  */
-export default function ResultsDashboard({ results, baselineParams, showChart, onToggleChart }) {
+export default function ResultsDashboard({ results, baselineParams, showChart, onToggleChart, dataInfo }) {
   if (!results) return null;
 
   const {
@@ -52,6 +52,13 @@ export default function ResultsDashboard({ results, baselineParams, showChart, o
   return (
     <div className="results-dashboard">
       <h2 className="section-title mobile-hidden">Impact Summary</h2>
+
+      {dataInfo?.lastUpdated && (
+        <div className="data-freshness">
+          Reserves data: <a href={dataInfo.sourceUrl} target="_blank" rel="noopener noreferrer">{dataInfo.source}</a>
+          {' '}— {dataInfo.lastUpdated}
+        </div>
+      )}
 
       {/* Fuel gauge visualisation */}
       <FuelGauge
