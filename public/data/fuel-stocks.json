@@ -1,0 +1,26 @@
+{
+  "lastUpdated": "2026-03-18",
+  "source": "MBIE Fuel Stocks Update",
+  "sourceUrl": "https://www.mbie.govt.nz/about/news/fuel-stocks-update",
+  "note": "Data as at 11:59 PM Wednesday 18 March 2026. Updated automatically via GitHub Actions.",
+  "dailyDemand": {
+    "petrol": 8.1,
+    "diesel": 10.7,
+    "jetFuel": 4.8,
+    "unit": "million litres/day"
+  },
+  "daysOfCover": {
+    "petrol": {
+      "inCountry": 28,
+      "total": 49.9
+    },
+    "diesel": {
+      "inCountry": 21,
+      "total": 45.5
+    },
+    "jetFuel": {
+      "inCountry": 24,
+      "total": 44.7
+    }
+  }
+}

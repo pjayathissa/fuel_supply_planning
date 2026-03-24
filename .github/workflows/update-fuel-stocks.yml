@@ -1,0 +1,40 @@
+name: Update MBIE Fuel Stocks Data
+
+on:
+  schedule:
+    # MBIE publishes updates Monday and Wednesday afternoons (NZ time = UTC+12/13).
+    # Run at 06:00 UTC (6-7 PM NZT) on Mon & Wed to catch the afternoon updates.
+    - cron: '0 6 * * 1,3'
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  scrape-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run MBIE scraper
+        run: node scripts/scrape-mbie-fuel-stocks.mjs
+
+      - name: Check for changes
+        id: check
+        run: |
+          git diff --quiet public/data/fuel-stocks.json && echo "changed=false" >> "$GITHUB_OUTPUT" || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push updated data
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/fuel-stocks.json
+          git commit -m "chore: update MBIE fuel stocks data ($(date -u +%Y-%m-%d))"
+          git push
